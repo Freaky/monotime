@@ -31,4 +31,11 @@ class MonotimeTest < Minitest::Test
     assert elapsed >= Duration::from_secs(0.01)
     assert elapsed <= Duration::from_secs(0.02)
   end
+
+  def test_duration_format
+    assert_equal "1s", Duration::from_secs(1).to_s
+    assert_equal "1ms", Duration::from_millis(1).to_s
+    assert_equal "1μs", Duration::from_micros(1).to_s
+    assert_equal "1ns", Duration::from_nanos(1).to_s
+  end
 end

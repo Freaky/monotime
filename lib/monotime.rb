@@ -166,18 +166,20 @@ module Monotime
     def to_s(precision = 9)
       postfix = 's'
       ns = self.ns.abs
-      num = "#{'-' if self.ns < 0}%.#{precision}f" % if ns >= 1_000_000_000
-        ns / 1_000_000_000.0
-      elsif ns >= 1_000_000
-        postfix = 'ms'
-        ns / 1_000_000.0
-      elsif ns >= 1_000
-        postfix = 'μs'
-        ns / 1_000.0
-      else
-        postfix = 'ns'
-        ns
-      end
+      time =
+        if ns >= 1_000_000_000
+          ns / 1_000_000_000.0
+        elsif ns >= 1_000_000
+          postfix = 'ms'
+          ns / 1_000_000.0
+        elsif ns >= 1_000
+          postfix = 'μs'
+          ns / 1_000.0
+        else
+          postfix = 'ns'
+          ns
+        end
+      num = format("#{'-' if self.ns.negative?}%.#{precision}f", time)
       num.sub(/\.?0*$/, '') << postfix
     end
   end
