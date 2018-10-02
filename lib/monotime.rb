@@ -62,8 +62,8 @@ module Monotime
     # Compare this +Instant+ with another.
     def <=>(other)
       case other
-      when self.class then @ns <=> other.ns
-      else raise TypeError, "Not a #{self.class}"
+      when Instant then @ns <=> other.ns
+      else raise TypeError, 'Not an Instant'
       end
     end
   end
