@@ -155,7 +155,7 @@ module Monotime
     # are encouraged to use their own formatting methods.
     def to_s(precision = 9)
       ns = to_nanos.abs
-      div, unit = DIVISORS.find { |div, _| ns >= div }
+      div, unit = DIVISORS.find { |d, _| ns >= d }
       ns /= div if div.nonzero?
       num = format("#{'-' if to_nanos.negative?}%.#{precision}f", ns)
       num.sub!(/\.?0*$/, '') if precision.nonzero?
