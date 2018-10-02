@@ -15,11 +15,12 @@ class MonotimeTest < Minitest::Test
 
   def test_instant_equality
     a = Instant.now
+    dur = Duration::from_nanos(1)
     assert_equal a, a
     assert_equal a.hash, a.hash
     assert (a <=> a).zero?
-    assert (a < a + 1)
-    assert (a > a - 1)
+    assert (a < a + dur)
+    assert (a > a - dur)
   end
 
   def test_instant_elapsed
