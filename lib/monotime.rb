@@ -44,27 +44,20 @@ module Monotime
     end
 
     # Add a +Duration+ to this +Instant+, returning a new +Instant+.
-    #
-    # You can also pass an +Integer+ in nanoseconds, but this is strongly
-    # discouraged and may be removed.
     def +(other)
       case other
       when Duration then Instant.new(self.ns + other.ns)
-      when Integer then Instant.new(self.ns + other)
-      else raise TypeError, 'Not a Duration or Integer'
+      else raise TypeError, 'Not a Duration'
       end
     end
 
     # Subtract another +Instant+ to generate a +Duration+ between the two,
     # or a +Duration+, to generate an +Instant+ offset by it.
-    #
-    # Also supports an +Integer+ in nanoseconds, again strongly discouraged.
     def -(other)
       case other
       when Instant then Duration.new(other.ns - self.ns)
       when Duration then Instant.new(self.ns - other.ns)
-      when Integer then Instant.new(self.ns - other)
-      else raise TypeError, 'Not an Instant, Duration or Integer'
+      else raise TypeError, 'Not an Instant or Duration'
       end
     end
 
@@ -125,8 +118,7 @@ module Monotime
     def +(other)
       case other
       when Duration then Duration.new(self.ns + other.ns)
-      when Numeric then Duration.new(self.ns + other)
-      else raise TypeError, 'Not a Duration or Numeric'
+      else raise TypeError, 'Not a Duration'
       end
     end
 
@@ -134,8 +126,7 @@ module Monotime
     def -(other)
       case other
       when Duration then Duration.new(self.ns - other.ns)
-      when Numeric then Duration.new(self.ns - other)
-      else raise TypeError, 'Not a Duration or Numeric'
+      else raise TypeError, 'Not a Duration'
       end
     end
 
