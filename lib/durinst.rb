@@ -6,15 +6,15 @@ require 'dry-equalizer'
 
 module Durinst
   class Instant
-    attr_reader :monotime
+    attr_reader :ns
 
-    include Dry::Equalizer(:monotime)
+    include Dry::Equalizer(:ns)
     include Comparable
 
-    def initialize(monotime = Process.clock_gettime(Process::CLOCK_MONOTONIC))
-      raise TypeError, 'Not a Float' unless monotime.is_a? Float
+    def initialize(ns = Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond))
+      raise TypeError, 'Not an Integer' unless ns.is_a? Integer
 
-      @monotime = monotime
+      @ns = ns
     end
 
     def self.now
@@ -34,119 +34,111 @@ module Durinst
 
     def +(other)
       case other
-      when Duration then Instant.new(self.monotime + other.seconds)
-      when Numeric then Instant.new(self.monotime + other)
-      else raise TypeError, 'Not a Duration or Numeric'
+      when Duration then Instant.new(self.ns + other.ns)
+      when Integer then Instant.new(self.ns + other)
+      else raise TypeError, 'Not a Duration or Integer'
       end
     end
 
     def -(other)
       case other
-      when Instant then Duration.new(self.monotime - other.monotime)
-      when Duration then Instant.new(self.monotime - other.seconds)
-      when Numeric then Instant.new(self.monotime - other)
-      else raise TypeError, 'Not an Instant, Duration or Numeric'
+      when Instant then Duration.new(self.ns - other.ns)
+      when Duration then Instant.new(self.ns - other.ns)
+      when Integer then Instant.new(self.ns - other)
+      else raise TypeError, 'Not an Instant, Duration or Integer'
       end
     end
 
     def <=>(other)
       case other
-      when self.class then self.monotime <=> other.monotime
+      when self.class then self.ns <=> other.ns
       else raise TypeError, 'Not a #{self.class}'
       end
-    end
-
-    def to_f
-      @monotime
-    end
-
-    def to_i
-      @monotime.to_i
     end
   end
 
   class Duration
-    attr_reader :seconds
+    attr_reader :ns
 
-    include Dry::Equalizer(:seconds)
+    include Dry::Equalizer(:ns)
     include Comparable
 
-    def initialize(seconds = 0.0)
-      raise TypeError, 'Not a Float' unless seconds.is_a? Float
+    def initialize(ns = 0)
+      raise TypeError, 'Not an Integer' unless ns.is_a? Integer
 
-      @seconds = seconds
+      @ns = ns
     end
 
     class << self
       def from_secs(secs)
-        new(Float(secs))
+        new(Integer(Float(secs) * 1_000_000_000))
       end
 
       def from_millis(millis)
-        new(Float(millis) / 1_000)
+        new(Integer(Float(millis) * 1_000_000))
       end
 
       def from_micros(micros)
-        new(Float(micros) / 1_000_000)
+        new(Integer(Float(micros) * 1_000))
       end
 
       def from_nanos(nanos)
-        new(Float(nanos) / 1_000_000_000)
+        new(Integer(nanos))
       end
     end
 
     def +(other)
       case other
-      when Duration then Duration.new(self.seconds + other.seconds)
-      when Numeric then Duration.new(self.seconds + other)
+      when Duration then Duration.new(self.ns + other.ns)
+      when Numeric then Duration.new(self.ns + other)
       else raise TypeError, 'Not a Duration or Numeric'
       end
     end
 
     def -(other)
       case other
-      when Duration then Duration.new(self.seconds - other.seconds)
-      when Numeric then Duration.new(self.seconds - other)
+      when Duration then Duration.new(self.ns - other.ns)
+      when Numeric then Duration.new(self.ns - other)
       else raise TypeError, 'Not a Duration or Numeric'
       end
     end
 
     def <=>(other)
       case other
-      when self.class then self.seconds <=> other.seconds
+      when self.class then self.ns <=> other.ns
       else raise TypeError, "Not a #{self.class}"
       end
     end
 
     def to_secs
-    	@seconds
+    	@ns / 1_000_000_000
     end
 
     def to_millis
-    	@seconds * 1_000
+    	@ns / 1_000_000
     end
 
     def to_micros
-    	@seconds * 1_000_000
+    	@ns * 1_000
     end
 
     def to_nanos
-    	@seconds * 1_000_000_000
+    	@ns
     end
 
     def to_s(precision = 9)
     	postfix = 's'
-    	num = "%.#{precision}f" % if self.seconds >= 1
-        self.seconds
-      elsif self.seconds >= 0.001
+    	num = "%.#{precision}f" % if self.ns >= 1_000_000_000
+        self.ns / 1_000_000_000.0
+      elsif self.ns >= 1_000_000
       	postfix = 'ms'
-        (self.seconds * 1_000)
-      elsif self.seconds >= 0.000001
+        self.ns / 1_000_000.0
+      elsif self.ns >= 1_000
       	postfix = 'μs'
-        (self.seconds * 1_000_000)
+        self.ns / 1_000.0
       else
       	postfix = 'ns'
-        (self.seconds * 1_000_000_000)
+        self.ns
       end
       num.sub(/\.?0*$/, '') << postfix
     end
