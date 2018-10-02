@@ -31,7 +31,7 @@ module Monotime
     # Return a +Duration+ between this +Instant+ and another.
     def duration_since(earlier)
       case earlier
-      when Instant then self - earlier
+      when Instant then earlier - self
       else raise TypeError, 'Not an Instant'
       end
     end
@@ -53,7 +53,7 @@ module Monotime
     # or a +Duration+, to generate an +Instant+ offset by it.
     def -(other)
       case other
-      when Instant then Duration.new(other.ns - @ns)
+      when Instant then Duration.new(@ns - other.ns)
       when Duration then Instant.new(@ns - other.to_nanos)
       else raise TypeError, 'Not an Instant or Duration'
       end

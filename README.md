@@ -71,7 +71,7 @@ And how to do basic maths on itself:
 (Instant.now - Duration.from_secs(1)).elapsed.to_s # => "1.000014627s"
 
 # Instant - Instant => Duration
-(Instant.now - Instant.now).to_s                   # => "3.439μs"
+(Instant.now - Instant.now).to_s                   # => "-5.585μs"
 ```
 
 `Duration` and `Instant` are also `Comparable` with other instances of their
