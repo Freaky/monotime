@@ -146,7 +146,7 @@ module Monotime
 
     # Return this +Duration+ in microseconds.
     def to_micros
-      @ns * 1_000.0
+      @ns / 1_000.0
     end
 
     # Return this +Duration+ in nanoseconds.
