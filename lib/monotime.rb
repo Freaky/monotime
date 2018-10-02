@@ -52,7 +52,7 @@ module Monotime
     def <=>(other)
       case other
       when self.class then self.ns <=> other.ns
-      else raise TypeError, 'Not a #{self.class}'
+      else raise TypeError, "Not a #{self.class}"
       end
     end
   end
