@@ -44,7 +44,7 @@ module Monotime
     # Add a +Duration+ to this +Instant+, returning a new +Instant+.
     def +(other)
       case other
-      when Duration then Instant.new(@ns + other.ns)
+      when Duration then Instant.new(@ns + other.to_nanos)
       else raise TypeError, 'Not a Duration'
       end
     end
@@ -54,7 +54,7 @@ module Monotime
     def -(other)
       case other
       when Instant then Duration.new(other.ns - @ns)
-      when Duration then Instant.new(@ns - other.ns)
+      when Duration then Instant.new(@ns - other.to_nanos)
       else raise TypeError, 'Not an Instant or Duration'
       end
     end
@@ -70,11 +70,7 @@ module Monotime
 
   # A type representing a span of time in nanoseconds.
   class Duration
-    # The span in nanoseconds.  Direct use should be avoided in favour of
-    # +to_nanos+.
-    attr_reader :ns
-
-    include Dry::Equalizer(:ns)
+    include Dry::Equalizer(:to_nanos)
     include Comparable
 
     # Create a new +Duration+ of a specified number of nanoseconds, zero by
@@ -112,41 +108,32 @@ module Monotime
 
     # Add another +Duration+ to this one, returning a new +Duration+.
     def +(other)
-      case other
-      when Duration then Duration.new(@ns + other.ns)
-      else raise TypeError, 'Not a Duration'
-      end
+      Duration.new(to_nanos + other.to_nanos)
     end
 
     # Subtract another +Duration+ from this one, returning a new +Duration+.
     def -(other)
-      case other
-      when Duration then Duration.new(@ns - other.ns)
-      else raise TypeError, 'Not a Duration'
-      end
+      Duration.new(to_nanos - other.to_nanos)
     end
 
     # Compare this +Duration+ with another.
     def <=>(other)
-      case other
-      when self.class then @ns <=> other.ns
-      else raise TypeError, "Not a #{self.class}"
-      end
+      to_nanos <=> other.to_nanos
     end
 
     # Return this +Duration+ in seconds.
     def to_secs
-      @ns / 1_000_000_000.0
+      to_nanos / 1_000_000_000.0
     end
 
     # Return this +Duration+ in milliseconds.
     def to_millis
-      @ns / 1_000_000.0
+      to_nanos / 1_000_000.0
     end
 
     # Return this +Duration+ in microseconds.
     def to_micros
-      @ns / 1_000.0
+      to_nanos / 1_000.0
     end
 
     # Return this +Duration+ in nanoseconds.
@@ -167,10 +154,10 @@ module Monotime
     # The exact format is subject to change, users with specific requirements
     # are encouraged to use their own formatting methods.
     def to_s(precision = 9)
-      ns = @ns.abs
+      ns = to_nanos.abs
       div, unit = DIVISORS.find { |div, _| ns >= div }
       ns /= div if div.nonzero?
-      num = format("#{'-' if @ns.negative?}%.#{precision}f", ns)
+      num = format("#{'-' if to_nanos.negative?}%.#{precision}f", ns)
       num.sub(/\.?0*$/, '') << unit
     end
   end
