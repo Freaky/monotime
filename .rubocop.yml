@@ -1,6 +1,2 @@
 Metrics/LineLength:
   Max: 96
-
-# Sometimes it's best to be explicit.
-Style/RedundantSelf:
-  Enabled: false

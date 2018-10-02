@@ -44,7 +44,7 @@ module Monotime
     # Add a +Duration+ to this +Instant+, returning a new +Instant+.
     def +(other)
       case other
-      when Duration then Instant.new(self.ns + other.ns)
+      when Duration then Instant.new(@ns + other.ns)
       else raise TypeError, 'Not a Duration'
       end
     end
@@ -53,8 +53,8 @@ module Monotime
     # or a +Duration+, to generate an +Instant+ offset by it.
     def -(other)
       case other
-      when Instant then Duration.new(other.ns - self.ns)
-      when Duration then Instant.new(self.ns - other.ns)
+      when Instant then Duration.new(other.ns - @ns)
+      when Duration then Instant.new(@ns - other.ns)
       else raise TypeError, 'Not an Instant or Duration'
       end
     end
@@ -62,7 +62,7 @@ module Monotime
     # Compare this +Instant+ with another.
     def <=>(other)
       case other
-      when self.class then self.ns <=> other.ns
+      when self.class then @ns <=> other.ns
       else raise TypeError, "Not a #{self.class}"
       end
     end
@@ -113,7 +113,7 @@ module Monotime
     # Add another +Duration+ to this one, returning a new +Duration+.
     def +(other)
       case other
-      when Duration then Duration.new(self.ns + other.ns)
+      when Duration then Duration.new(@ns + other.ns)
       else raise TypeError, 'Not a Duration'
       end
     end
@@ -121,7 +121,7 @@ module Monotime
     # Subtract another +Duration+ from this one, returning a new +Duration+.
     def -(other)
       case other
-      when Duration then Duration.new(self.ns - other.ns)
+      when Duration then Duration.new(@ns - other.ns)
       else raise TypeError, 'Not a Duration'
       end
     end
@@ -129,7 +129,7 @@ module Monotime
     # Compare this +Duration+ with another.
     def <=>(other)
       case other
-      when self.class then self.ns <=> other.ns
+      when self.class then @ns <=> other.ns
       else raise TypeError, "Not a #{self.class}"
       end
     end
@@ -161,7 +161,7 @@ module Monotime
     # are encouraged to use their own formatting methods.
     def to_s(precision = 9)
       postfix = 's'
-      ns = self.ns.abs
+      ns = @ns.abs
       time =
         if ns >= 1_000_000_000
           ns / 1_000_000_000.0
@@ -175,7 +175,7 @@ module Monotime
           postfix = 'ns'
           ns
         end
-      num = format("#{'-' if self.ns.negative?}%.#{precision}f", time)
+      num = format("#{'-' if @ns.negative?}%.#{precision}f", time)
       num.sub(/\.?0*$/, '') << postfix
     end
   end
