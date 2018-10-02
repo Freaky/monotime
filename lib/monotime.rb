@@ -41,6 +41,11 @@ module Monotime
       duration_since(self.class.now)
     end
 
+    # Sugar for +elapsed.to_s+.
+    def to_s(*args)
+      elapsed.to_s(*args)
+    end
+
     # Add a +Duration+ to this +Instant+, returning a new +Instant+.
     def +(other)
       case other
@@ -154,6 +159,7 @@ module Monotime
     # The exact format is subject to change, users with specific requirements
     # are encouraged to use their own formatting methods.
     def to_s(precision = 9)
+      precision = Integer(precision).abs
       ns = to_nanos.abs
       div, unit = DIVISORS.find { |d, _| ns >= d }
       ns /= div if div.nonzero?
