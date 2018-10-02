@@ -20,9 +20,7 @@ module Monotime
     #
     # Users should generally *not* pass anything to this function.
     def initialize(nanos = Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond))
-      raise TypeError, 'Not an Integer' unless nanos.is_a? Integer
-
-      @ns = nanos
+      @ns = Integer(nanos)
     end
 
     # An alias to +new+, and generally preferred over it.
@@ -82,9 +80,7 @@ module Monotime
     # Create a new +Duration+ of a specified number of nanoseconds, zero by
     # default.
     def initialize(nanos = 0)
-      raise TypeError, 'Not an Integer' unless nanos.is_a? Integer
-
-      @ns = nanos
+      @ns = Integer(nanos)
     end
 
     class << self
