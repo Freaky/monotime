@@ -1,8 +1,6 @@
 # Durinst
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/durinst`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+`Instant` and `Duration` types for measuring elapsed times accurately in Ruby.
 
 ## Installation
 
@@ -22,7 +20,62 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+The typical way everyone does "correct" elapsed-time measurements in Ruby is
+this pile of nonsense:
+
+```ruby
+start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+do_something
+elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+```
+
+Not only is it long-winded, it's imprecise, converting to floating point instead
+of working off precise timestamps.
+
+`Durinst` offers this alternative:
+
+```ruby
+include Durinst
+
+start = Instant.now
+do_something
+elapsed = start.elapsed
+
+# or
+elapsed = Duration.measure { do_something }
+```
+
+`elapsed` is not a dimensionless `Float`, but a `Duration` type, and internally
+both `Instant` and `Duration` operate in *nanoseconds* to most closely match
+the native timekeeping types used by most operating systems.
+
+`Duration` knows how to format itself:
+
+```ruby
+Duration.from_millis(42).to_s       # => "42ms"
+Duration.from_nanos(12345).to_s     # => "12.345μs"
+Duration.from_secs(1.12345).to_s(2) # => "1.12s"
+```
+
+And how to do basic maths on itself:
+
+```ruby
+(Duration.from_millis(42) + Duration.from_secs(1)).to_s  # => "1.042s"
+(Duration.from_millis(42) - Duration.from_secs(-1)).to_s # => "-958ms"
+```
+
+`Instant` does some simple maths too:
+
+```ruby
+# Instant - Duration => Instant
+(Instant.now - Duration.from_secs(1)).elapsed.to_s # => "1.000014627s"
+
+# Instant - Instant => Duration
+(Instant.now - Instant.now).to_s                   # => "3.439μs"
+```
+
+`Duration` and `Instant` are also `Comparable` with other instances of their
+type, and support `#hash`.
 
 ## Development
 
@@ -32,7 +85,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/durinst.
+Bug reports and pull requests are welcome on GitHub at https://github.com/Freaky/durinst.
 
 ## License
 
