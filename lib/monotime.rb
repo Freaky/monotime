@@ -158,7 +158,8 @@ module Monotime
       div, unit = DIVISORS.find { |div, _| ns >= div }
       ns /= div if div.nonzero?
       num = format("#{'-' if to_nanos.negative?}%.#{precision}f", ns)
-      num.sub(/\.?0*$/, '') << unit
+      num.sub!(/\.?0*$/, '') if precision.nonzero?
+      num << unit
     end
   end
 end

@@ -47,4 +47,10 @@ class MonotimeTest < Minitest::Test
 
     assert_equal '1ns', Duration.from_nanos(1).to_s
   end
+
+  def test_duration_format_zero_stripping
+    # Zeros should not be stripped if precision = 0
+    assert_equal '100s', Duration.from_secs(100).to_s(0)
+    assert_equal '100ns', Duration.from_nanos(100).to_s
+  end
 end
