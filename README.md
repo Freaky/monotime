@@ -1,13 +1,13 @@
-# Durinst
+# Monotime
 
-`Instant` and `Duration` types for measuring elapsed times accurately in Ruby.
+A sensible interface to Ruby's monotonic clock, inspired by Rust.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'durinst'
+gem 'monotime'
 ```
 
 And then execute:
@@ -16,7 +16,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install durinst
+    $ gem install monotime
 
 ## Usage
 
@@ -32,10 +32,10 @@ elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
 Not only is it long-winded, it's imprecise, converting to floating point instead
 of working off precise timestamps.
 
-`Durinst` offers this alternative:
+`Monotime` offers this alternative:
 
 ```ruby
-include Durinst
+include Monotime
 
 start = Instant.now
 do_something
@@ -75,7 +75,7 @@ And how to do basic maths on itself:
 ```
 
 `Duration` and `Instant` are also `Comparable` with other instances of their
-type, and support `#hash`.
+type, and support `#hash` for use in, er, hashes.
 
 ## Development
 
@@ -85,7 +85,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/Freaky/durinst.
+Bug reports and pull requests are welcome on GitHub at https://github.com/Freaky/monotime.
 
 ## License
 

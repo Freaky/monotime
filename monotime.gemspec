@@ -1,16 +1,16 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "durinst/version"
+require "monotime/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "durinst"
-  spec.version       = Durinst::VERSION
+  spec.name          = "monotime"
+  spec.version       = Monotime::VERSION
   spec.authors       = ["Thomas Hurst"]
   spec.email         = ["tom@hur.st"]
 
-  spec.summary       = %q{Duration and Instant types for measuring durations}
-  spec.homepage      = "https://github.com/Freaky/durinst"
+  spec.summary       = %q{A sensible interface to the monotonic clock}
+  spec.homepage      = "https://github.com/Freaky/monotime"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'

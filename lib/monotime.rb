@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'durinst/version'
+require 'monotime/version'
 
 require 'dry-equalizer'
 
-module Durinst
+module Monotime
   class Instant
     attr_reader :ns
 

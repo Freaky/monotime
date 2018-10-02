@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    durinst (0.1.0)
+    monotime (0.1.0)
       dry-equalizer
 
 GEM
@@ -16,8 +16,8 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.16)
-  durinst!
   minitest (~> 5.0)
+  monotime!
   rake (~> 10.0)
 
 BUNDLED WITH
