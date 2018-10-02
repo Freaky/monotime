@@ -154,29 +154,24 @@ module Monotime
       @ns
     end
 
+    DIVISORS = [
+      [1_000_000_000.0, 's'],
+      [1_000_000.0, 'ms'],
+      [1_000.0, 'μs'],
+      [0, 'ns']
+    ].freeze
+
     # Format this +Duration+ into a human-readable string, with a given number
     # of decimal places.
     #
     # The exact format is subject to change, users with specific requirements
     # are encouraged to use their own formatting methods.
     def to_s(precision = 9)
-      postfix = 's'
       ns = @ns.abs
-      time =
-        if ns >= 1_000_000_000
-          ns / 1_000_000_000.0
-        elsif ns >= 1_000_000
-          postfix = 'ms'
-          ns / 1_000_000.0
-        elsif ns >= 1_000
-          postfix = 'μs'
-          ns / 1_000.0
-        else
-          postfix = 'ns'
-          ns
-        end
-      num = format("#{'-' if @ns.negative?}%.#{precision}f", time)
-      num.sub(/\.?0*$/, '') << postfix
+      div, unit = DIVISORS.find { |div, _| ns >= div }
+      ns /= div if div.nonzero?
+      num = format("#{'-' if @ns.negative?}%.#{precision}f", ns)
+      num.sub(/\.?0*$/, '') << unit
     end
   end
 end
