@@ -111,34 +111,35 @@ module Durinst
     end
 
     def to_secs
-    	@ns / 1_000_000_000
+      @ns / 1_000_000_000
     end
 
     def to_millis
-    	@ns / 1_000_000
+      @ns / 1_000_000
     end
 
     def to_micros
-    	@ns * 1_000
+      @ns * 1_000
     end
 
     def to_nanos
-    	@ns
+      @ns
     end
 
     def to_s(precision = 9)
-    	postfix = 's'
-    	num = "%.#{precision}f" % if self.ns >= 1_000_000_000
-        self.ns / 1_000_000_000.0
-      elsif self.ns >= 1_000_000
-      	postfix = 'ms'
-        self.ns / 1_000_000.0
-      elsif self.ns >= 1_000
-      	postfix = 'μs'
-        self.ns / 1_000.0
+      postfix = 's'
+      ns = self.ns.abs
+      num = "#{'-' if self.ns < 0}%.#{precision}f" % if ns >= 1_000_000_000
+        ns / 1_000_000_000.0
+      elsif ns >= 1_000_000
+        postfix = 'ms'
+        ns / 1_000_000.0
+      elsif ns >= 1_000
+        postfix = 'μs'
+        ns / 1_000.0
       else
-      	postfix = 'ns'
-        self.ns
+        postfix = 'ns'
+        ns
       end
       num.sub(/\.?0*$/, '') << postfix
     end
