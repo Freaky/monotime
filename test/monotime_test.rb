@@ -1,4 +1,4 @@
-require "test_helper"
+require 'test_helper'
 
 class MonotimeTest < Minitest::Test
   include Monotime
@@ -18,9 +18,9 @@ class MonotimeTest < Minitest::Test
     dur = Duration::from_nanos(1)
     assert_equal a, a
     assert_equal a.hash, a.hash
-    assert (a <=> a).zero?
-    assert (a < a + dur)
-    assert (a > a - dur)
+    assert((a <=> a).zero?)
+    assert(a < a + dur)
+    assert(a > a - dur)
   end
 
   def test_instant_elapsed
@@ -28,14 +28,14 @@ class MonotimeTest < Minitest::Test
     sleep 0.01
     elapsed = a.elapsed
 
-    assert elapsed >= Duration::from_secs(0.01)
-    assert elapsed <= Duration::from_secs(0.02)
+    assert elapsed >= Duration.from_secs(0.01)
+    assert elapsed <= Duration.from_secs(0.02)
   end
 
   def test_duration_format
-    assert_equal "1s", Duration::from_secs(1).to_s
-    assert_equal "1ms", Duration::from_millis(1).to_s
-    assert_equal "1μs", Duration::from_micros(1).to_s
-    assert_equal "1ns", Duration::from_nanos(1).to_s
+    assert_equal '1s', Duration.from_secs(1).to_s
+    assert_equal '1ms', Duration.from_millis(1).to_s
+    assert_equal '1μs', Duration.from_micros(1).to_s
+    assert_equal '1ns', Duration.from_nanos(1).to_s
   end
 end
