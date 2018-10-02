@@ -23,7 +23,7 @@ module Durinst
 
     def duration_since(earlier)
       case earlier
-      when Instant then earlier - self
+      when Instant then self - earlier
       else raise TypeError, 'Not an Instant'
       end
     end
@@ -42,7 +42,7 @@ module Durinst
 
     def -(other)
       case other
-      when Instant then Duration.new(self.ns - other.ns)
+      when Instant then Duration.new(other.ns - self.ns)
       when Duration then Instant.new(self.ns - other.ns)
       when Integer then Instant.new(self.ns - other)
       else raise TypeError, 'Not an Instant, Duration or Integer'
