@@ -85,6 +85,10 @@ module Durinst
       def from_nanos(nanos)
         new(Integer(nanos))
       end
+
+      def measure
+        Instant.now.tap { yield }.elapsed
+      end
     end
 
     def +(other)
