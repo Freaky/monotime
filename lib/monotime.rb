@@ -10,7 +10,7 @@ module Monotime
   class Instant
     # A measurement, in nanoseconds.  Should be considered opaque and
     # non-portable outside the process that created it.
-    attr_reader :ns
+    protected def ns() @ns end
 
     include Dry::Equalizer(:ns)
     include Comparable
