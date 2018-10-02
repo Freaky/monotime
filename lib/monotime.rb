@@ -146,7 +146,7 @@ module Monotime
       [1_000_000.0, 'ms'],
       [1_000.0, 'μs'],
       [0, 'ns']
-    ].freeze
+    ].map(&:freeze).freeze
 
     # Format this +Duration+ into a human-readable string, with a given number
     # of decimal places.
