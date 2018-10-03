@@ -17,10 +17,11 @@ class MonotimeTest < Minitest::Test
     a = Instant.now
     dur = Duration::from_nanos(1)
     assert_equal a, a
-    assert_equal a.hash, a.hash
+    assert_equal a.hash, a.dup.hash
     assert((a <=> a).zero?)
     assert(a < a + dur)
     assert(a > a - dur)
+    refute_equal a, a + dur
   end
 
   def test_instant_elapsed
@@ -30,6 +31,48 @@ class MonotimeTest < Minitest::Test
 
     assert elapsed >= Duration.from_secs(0.01)
     assert elapsed <= Duration.from_secs(0.02)
+  end
+
+  def test_duration_equality
+    a = Duration.from_secs(1)
+    b = Duration.from_secs(2)
+    assert_equal a, Duration.from_secs(1)
+    assert_equal a.hash, Duration.from_secs(1).hash
+    refute_equal a, b
+    assert a < b
+    assert b > a
+  end
+
+  def test_instant_hashing
+    inst0 = Instant.now
+    inst1 = inst0 + Duration.from_nanos(1)
+    inst2 = inst0 + Duration.from_secs(1)
+    inst3 = inst0 + Duration.from_secs(10)
+
+    hash = {inst0 => 0, inst1 => 1, inst2 => 2, inst3 => 3}
+
+    assert_equal hash[inst0], 0
+    assert_equal hash[inst1], 1
+    assert_equal hash[inst2], 2
+    assert_equal hash[inst3], 3
+
+    assert_equal hash.keys.sort, [inst0, inst1, inst2, inst3]
+  end
+
+  def test_duration_hashing
+    dur0 = Duration.new
+    dur1 = Duration.from_nanos(1)
+    dur2 = Duration.from_secs(1)
+    dur3 = Duration.from_secs(10)
+
+    hash = {dur0 => 0, dur1 => 1, dur2 => 2, dur3 => 3}
+
+    assert_equal hash[dur0], 0
+    assert_equal hash[dur1], 1
+    assert_equal hash[dur2], 2
+    assert_equal hash[dur3], 3
+
+    assert_equal hash.keys.sort, [dur0, dur1, dur2, dur3]
   end
 
   def test_duration_format
