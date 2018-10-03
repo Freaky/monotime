@@ -61,7 +61,7 @@ And how to do basic maths on itself:
 
 ```ruby
 (Duration.from_millis(42) + Duration.from_secs(1)).to_s  # => "1.042s"
-(Duration.from_millis(42) - Duration.from_secs(-1)).to_s # => "-958ms"
+(Duration.from_millis(42) - Duration.from_secs(1)).to_s  # => "-958ms"
 ```
 
 `Instant` does some simple maths too:
