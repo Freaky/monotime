@@ -16,16 +16,22 @@ module Monotime
     # that given by +Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond))+.
     #
     # Users should generally *not* pass anything to this function.
+    #
+    # @param nanos [Integer]
     def initialize(nanos = Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond))
       @ns = Integer(nanos)
     end
 
     # An alias to +new+, and generally preferred over it.
+    #
+    # @return [Instant]
     def self.now
       new
     end
 
     # Return a +Duration+ between this +Instant+ and another.
+    #
+    # @return [Duration]
     def duration_since(earlier)
       case earlier
       when Instant then earlier - self
@@ -34,16 +40,24 @@ module Monotime
     end
 
     # Return a +Duration+ since this +Instant+ and now.
+    #
+    # @return [Duration]
     def elapsed
       duration_since(self.class.now)
     end
 
-    # Sugar for +elapsed.to_s+.
+    # Sugar for +elapsed.to_s+.  See +Duration#to_s+
+    #
+    # @param precision [Integer] the maximum number of decimal places
+    # @return [String]
     def to_s(*args)
       elapsed.to_s(*args)
     end
 
     # Add a +Duration+ to this +Instant+, returning a new +Instant+.
+    #
+    # @param other [Duration]
+    # @return [Instant]
     def +(other)
       case other
       when Duration then Instant.new(@ns + other.to_nanos)
@@ -53,6 +67,9 @@ module Monotime
 
     # Subtract another +Instant+ to generate a +Duration+ between the two,
     # or a +Duration+, to generate an +Instant+ offset by it.
+    #
+    # @param other [Instant, Duration]
+    # @return [Duration, Instant]
     def -(other)
       case other
       when Instant then Duration.new(@ns - other.ns)
@@ -83,43 +100,66 @@ module Monotime
 
     # Create a new +Duration+ of a specified number of nanoseconds, zero by
     # default.
+    #
+    # @param nanos [Integer]
     def initialize(nanos = 0)
       @ns = Integer(nanos)
     end
 
     class << self
       # Generate a new +Duration+ measuring the given number of seconds.
+      #
+      # @param secs [Numeric]
+      # @return [Duration]
       def from_secs(secs)
         new(Integer(Float(secs) * 1_000_000_000))
       end
 
       # Generate a new +Duration+ measuring the given number of milliseconds.
+      #
+      # @param millis [Numeric]
+      # @return [Duration]
       def from_millis(millis)
         new(Integer(Float(millis) * 1_000_000))
       end
 
       # Generate a new +Duration+ measuring the given number of microseconds.
+      #
+      # @param micros [Numeric]
+      # @return [Duration]
       def from_micros(micros)
         new(Integer(Float(micros) * 1_000))
       end
 
       # Generate a new +Duration+ measuring the given number of nanoseconds.
+      #
+      # @param nanos [Numeric]
+      # @return [Duration]
       def from_nanos(nanos)
         new(Integer(nanos))
       end
 
       # Return a +Duration+ measuring the elapsed time of the yielded block.
+      #
+      # @return [Duration]
       def measure
         Instant.now.tap { yield }.elapsed
       end
     end
 
     # Add another +Duration+ to this one, returning a new +Duration+.
+    #
+    # @param [#to_nanos]
+    #
+    # @return [Duration]
     def +(other)
       Duration.new(to_nanos + other.to_nanos)
     end
 
     # Subtract another +Duration+ from this one, returning a new +Duration+.
+    #
+    # @param [#to_nanos]
+    # @return [Duration]
     def -(other)
       Duration.new(to_nanos - other.to_nanos)
     end
@@ -140,21 +180,29 @@ module Monotime
     end
 
     # Return this +Duration+ in seconds.
+    #
+    # @return [Float]
     def to_secs
       to_nanos / 1_000_000_000.0
     end
 
     # Return this +Duration+ in milliseconds.
+    #
+    # @return [Float]
     def to_millis
       to_nanos / 1_000_000.0
     end
 
     # Return this +Duration+ in microseconds.
+    #
+    # @return [Float]
     def to_micros
       to_nanos / 1_000.0
     end
 
     # Return this +Duration+ in nanoseconds.
+    #
+    # @return [Integer]
     def to_nanos
       @ns
     end
@@ -173,6 +221,9 @@ module Monotime
     #
     # The exact format is subject to change, users with specific requirements
     # are encouraged to use their own formatting methods.
+    #
+    # @param precision [Integer] the maximum number of decimal places
+    # @return [String]
     def to_s(precision = 9)
       precision = Integer(precision).abs
       ns = to_nanos.abs
