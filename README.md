@@ -1,3 +1,6 @@
+[![Gem Version](https://badge.fury.io/rb/monotime.svg)](https://badge.fury.io/rb/monotime)
+[![Build Status](https://travis-ci.org/Freaky/monotime.svg?branch=master)](https://travis-ci.org/Freaky/monotime)
+
 # Monotime
 
 A sensible interface to Ruby's monotonic clock, inspired by Rust.
