@@ -166,6 +166,8 @@ module Monotime
       [0, 'ns']
     ].map(&:freeze).freeze
 
+    private_constant :DIVISORS
+
     # Format this +Duration+ into a human-readable string, with a given number
     # of decimal places.
     #
