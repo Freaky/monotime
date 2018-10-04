@@ -30,12 +30,12 @@ module Monotime
 
     # Return a +Duration+ between this +Instant+ and another.
     #
+    # @param earlier [Instant]
     # @return [Duration]
     def duration_since(earlier)
-      case earlier
-      when Instant then earlier - self
-      else raise TypeError, 'Not an Instant'
-      end
+      raise TypeError, 'Not an Instant' unless earlier.is_a?(Instant)
+
+      earlier - self
     end
 
     # Return a +Duration+ since this +Instant+ and now.
@@ -54,25 +54,26 @@ module Monotime
 
     # Add a +Duration+ to this +Instant+, returning a new +Instant+.
     #
-    # @param other [Duration]
+    # @param other [Duration, #to_nanos]
     # @return [Instant]
     def +(other)
-      case other
-      when Duration then Instant.new(@ns + other.to_nanos)
-      else raise TypeError, 'Not a Duration'
-      end
+      return TypeError, 'Not one of: [Duration, #to_nanos]' unless other.respond_to?(:to_nanos)
+
+      Instant.new(@ns + other.to_nanos)
     end
 
     # Subtract another +Instant+ to generate a +Duration+ between the two,
     # or a +Duration+, to generate an +Instant+ offset by it.
     #
-    # @param other [Instant, Duration]
+    # @param other [Instant, Duration, #to_nanos]
     # @return [Duration, Instant]
     def -(other)
-      case other
-      when Instant then Duration.new(@ns - other.ns)
-      when Duration then Instant.new(@ns - other.to_nanos)
-      else raise TypeError, 'Not an Instant or Duration'
+      if other.is_a?(Instant)
+        Duration.new(@ns - other.ns)
+      elsif other.respond_to?(:to_nanos)
+        Instant.new(@ns - other.to_nanos)
+      else
+        raise TypeError, 'Not one of: [Instant, Duration, #to_nanos]'
       end
     end
 
@@ -147,18 +148,22 @@ module Monotime
 
     # Add another +Duration+ to this one, returning a new +Duration+.
     #
-    # @param [#to_nanos]
+    # @param [Duration, #to_nanos]
     #
     # @return [Duration]
     def +(other)
+      raise TypeError, 'Not one of: [Duration, #to_nanos]' unless other.respond_to?(:to_nanos)
+
       Duration.new(to_nanos + other.to_nanos)
     end
 
     # Subtract another +Duration+ from this one, returning a new +Duration+.
     #
-    # @param [#to_nanos]
+    # @param [Duration, #to_nanos]
     # @return [Duration]
     def -(other)
+      raise TypeError, 'Not one of: [Duration, #to_nanos]' unless other.respond_to?(:to_nanos)
+
       Duration.new(to_nanos - other.to_nanos)
     end
 
