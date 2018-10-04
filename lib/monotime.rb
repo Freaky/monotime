@@ -12,8 +12,7 @@ module Monotime
 
     include Comparable
 
-    # Create a new +Instant+ from a given nanosecond measurement, defaulting to
-    # that given by +Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond))+.
+    # Create a new +Instant+ from an optional nanosecond measurement.
     #
     # Users should generally *not* pass anything to this function.
     #
@@ -46,10 +45,9 @@ module Monotime
       duration_since(self.class.now)
     end
 
-    # Sugar for +elapsed.to_s+.  See +Duration#to_s+
+    # Sugar for +elapsed.to_s+.
     #
-    # @param precision [Integer] the maximum number of decimal places
-    # @return [String]
+    # @see Duration#to_s
     def to_s(*args)
       elapsed.to_s(*args)
     end
