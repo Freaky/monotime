@@ -2,8 +2,6 @@
 
 require 'monotime/version'
 
-require 'dry-equalizer'
-
 module Monotime
   # A measurement from the operating system's monotonic clock, with up to
   # nanosecond precision.
@@ -12,7 +10,6 @@ module Monotime
     # non-portable outside the process that created it.
     protected def ns() @ns end
 
-    include Dry::Equalizer(:ns)
     include Comparable
 
     # Create a new +Instant+ from a given nanosecond measurement, defaulting to
@@ -66,16 +63,22 @@ module Monotime
 
     # Compare this +Instant+ with another.
     def <=>(other)
-      case other
-      when Instant then @ns <=> other.ns
-      else raise TypeError, 'Not an Instant'
-      end
+      @ns <=> other.ns if other.is_a?(Instant)
+    end
+
+    def ==(other)
+      other.is_a?(Instant) && @ns == other.ns
+    end
+
+    alias eql? ==
+
+    def hash
+      self.class.hash ^ @ns.hash
     end
   end
 
   # A type representing a span of time in nanoseconds.
   class Duration
-    include Dry::Equalizer(:to_nanos)
     include Comparable
 
     # Create a new +Duration+ of a specified number of nanoseconds, zero by
@@ -123,7 +126,17 @@ module Monotime
 
     # Compare this +Duration+ with another.
     def <=>(other)
-      to_nanos <=> other.to_nanos
+      to_nanos <=> other.to_nanos if other.is_a? Duration
+    end
+
+    def ==(other)
+      other.is_a?(Duration) && to_nanos == other.to_nanos
+    end
+
+    alias eql? ==
+
+    def hash
+      self.class.hash ^ to_nanos.hash
     end
 
     # Return this +Duration+ in seconds.
