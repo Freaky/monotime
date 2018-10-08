@@ -43,6 +43,17 @@ class MonotimeTest < Minitest::Test
     assert b > a
   end
 
+  def test_duration_maths
+    one_sec = Duration.from_secs(1)
+    two_secs = Duration.from_secs(2)
+    three_secs = Duration.from_secs(3)
+
+    assert_equal one_sec * 2, two_secs
+    assert_equal two_secs / 2, one_sec
+    assert_equal one_sec + two_secs, three_secs
+    assert_equal two_secs - one_sec, one_sec
+  end
+
   def test_instant_hashing
     inst0 = Instant.now
     inst1 = inst0 + Duration.from_nanos(1)
