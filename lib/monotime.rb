@@ -52,7 +52,8 @@ module Monotime
       elapsed.to_s(*args)
     end
 
-    # Add a +Duration+ to this +Instant+, returning a new +Instant+.
+    # Add a +Duration+ or +#to_nanos+-coercible object to this +Instant+, returning
+    # a new +Instant+.
     #
     # @param other [Duration, #to_nanos]
     # @return [Instant]
@@ -63,7 +64,8 @@ module Monotime
     end
 
     # Subtract another +Instant+ to generate a +Duration+ between the two,
-    # or a +Duration+, to generate an +Instant+ offset by it.
+    # or a +Duration+ or +#to_nanos+-coercible object, to generate an +Instant+
+    # offset by it.
     #
     # @param other [Instant, Duration, #to_nanos]
     # @return [Duration, Instant]
@@ -77,17 +79,28 @@ module Monotime
       end
     end
 
-    # Compare this +Instant+ with another.
+    # Determine if the given +Instant+ is before, equal to or after this one.
+    # +nil+ if not passed an +Instant+.
+    #
+    # @return [-1, 0, 1, nil]
     def <=>(other)
       @ns <=> other.ns if other.is_a?(Instant)
     end
 
+    # Determine if +other+'s value equals that of this +Instant+.
+    # Use +eql?+ if type checks are desired for future compatibility.
+    #
+    # @return [Boolean]
+    # @see #eql?
     def ==(other)
       other.is_a?(Instant) && @ns == other.ns
     end
 
     alias eql? ==
 
+    # Generate a hash for this type and value.
+    #
+    # @return [Fixnum]
     def hash
       self.class.hash ^ @ns.hash
     end
@@ -146,7 +159,8 @@ module Monotime
       end
     end
 
-    # Add another +Duration+ to this one, returning a new +Duration+.
+    # Add another +Duration+ or +#to_nanos+-coercible object to this one,
+    # returning a new +Duration+.
     #
     # @param [Duration, #to_nanos]
     #
@@ -157,7 +171,8 @@ module Monotime
       Duration.new(to_nanos + other.to_nanos)
     end
 
-    # Subtract another +Duration+ from this one, returning a new +Duration+.
+    # Subtract another +Duration+ or +#to_nanos+-coercible object from this one,
+    # returning a new +Duration+.
     #
     # @param [Duration, #to_nanos]
     # @return [Duration]
@@ -167,17 +182,35 @@ module Monotime
       Duration.new(to_nanos - other.to_nanos)
     end
 
-    # Compare this +Duration+ with another.
+    # Compare the *value* of this +Duration+ with another, or any +#to_nanos+-coercible
+    # object, or nil if not comparable.
+    #
+    # @param [Duration, #to_nanos, Object]
+    # @return [-1, 0, 1, nil]
     def <=>(other)
-      to_nanos <=> other.to_nanos if other.is_a? Duration
+      to_nanos <=> other.to_nanos if other.respond_to?(:to_nanos)
     end
 
+    # Compare the equality of the *value* of this +Duration+ with another, or
+    # any +#to_nanos+-coercible object, or nil if not comparable.
+    #
+    # @param [Duration, #to_nanos, Object]
+    # @return [Boolean]
     def ==(other)
+      other.respond_to?(:to_nanos) && to_nanos == other.to_nanos
+    end
+
+    # Check equality of the value and type of this +Duration+ with another.
+    #
+    # @param [Duration, Object]
+    # @return [Boolean]
+    def eql?(other)
       other.is_a?(Duration) && to_nanos == other.to_nanos
     end
 
-    alias eql? ==
-
+    # Generate a hash for this type and value.
+    #
+    # @return [Fixnum]
     def hash
       self.class.hash ^ to_nanos.hash
     end
