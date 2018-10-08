@@ -56,13 +56,18 @@ class MonotimeTest < Minitest::Test
 
   def test_sleeps
     ten_ms = Duration.from_millis(10)
-    assert_includes 5..50, Duration.measure { ten_ms.sleep }.to_millis
 
     t = Instant.now
     a = t.sleep(ten_ms)
+
+    # Sleeping slightly less than the requested period is perfectly legitimate.
+    # Interlace another sleep test in the hope this is sufficient.
+    assert_includes 5..50, Duration.measure { ten_ms.sleep }.to_millis
+
     b = t.sleep(ten_ms)
 
     assert_includes 5..50, a.to_millis
+    assert a > b
     assert b.negative?
   end
 
