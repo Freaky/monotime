@@ -103,7 +103,7 @@ poke_duration = Duration.from_secs(60)
 loop do
   start = Instant.now
   poke_my_api(api_to_poke, what_to_poke_it_with)
-  start.sleep(poke_duration)
+  start.sleep(poke_duration) # sleeps 60 seconds minus how long poke_my_api took
   # alternative: start.sleep_secs(60)
 end
 ```
