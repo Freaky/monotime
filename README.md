@@ -82,6 +82,24 @@ And how to do basic maths on itself:
 `Duration` and `Instant` are also `Comparable` with other instances of their
 type, and support `#hash` for use in, er, hashes.
 
+## Duration duck typing
+
+Operations taking a `Duration` can also accept any type which implements
+`#to_nanos`, returning an (Integer) number of nanoseconds the value represents.
+
+For example, to treat built-in numeric types as second durations, you could do:
+
+```ruby
+class Numeric
+  def to_nanos
+    Integer(self * 1_000_000_000)
+  end
+end
+
+(Duration.from_secs(1) + 41).to_s  # => "42s"
+(Instant.now - 42).to_s            # => "42.000010545s"
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
