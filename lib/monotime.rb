@@ -182,6 +182,22 @@ module Monotime
       Duration.new(to_nanos - other.to_nanos)
     end
 
+    # Divide this duration by a +Numeric+.
+    #
+    # @param [Numeric]
+    # @return [Duration]
+    def /(other)
+      Duration.new(to_nanos / other)
+    end
+
+    # Multiply this duration by a +Numeric+.
+    #
+    # @param [Numeric]
+    # @return [Duration]
+    def *(other)
+      Duration.new(to_nanos * other)
+    end
+
     # Compare the *value* of this +Duration+ with another, or any +#to_nanos+-coercible
     # object, or nil if not comparable.
     #
