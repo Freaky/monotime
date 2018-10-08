@@ -45,6 +45,45 @@ module Monotime
       duration_since(self.class.now)
     end
 
+    # Sleep for the given `Duration` past this +Instant+, if any.
+    #
+    # @example Sleeps for a second
+    #   start = Instant.now
+    #   sleep 0.5 # do stuff for half a second
+    #   start.sleep(Duration.from_secs(1)).to_s # => "490.088706ms" (slept)
+    #   start.sleep(Duration.from_secs(1)).to_s # => "-12.963502ms" (did not sleep)
+    #
+    # @param duration [Duration, #to_nanos]
+    # @return [Duration] the slept duration, if +#positive?+, else the overshot time
+    def sleep(duration)
+      remaining = duration - elapsed
+
+      return remaining unless remaining.positive?
+      remaining.tap(&:sleep)
+    end
+
+    # Sleep for the given number of seconds past this +Instant+, if any.
+    #
+    # Equivalent to +#sleep(Duration.from_secs(secs))+
+    #
+    # @param secs [Numeric] number of seconds to sleep past this +Instant+
+    # @return [Duration] the slept duration, if +#positive?+, else the overshot time
+    # @see #sleep
+    def sleep_secs(secs)
+      sleep(Duration.from_secs(secs))
+    end
+
+    # Sleep for the given number of milliseconds past this +Instant+, if any.
+    #
+    # Equivalent to +#sleep(Duration.from_millis(millis))+
+    #
+    # @param millis [Numeric] number of milliseconds to sleep past this +Instant+
+    # @return [Duration] the slept duration, if +#positive?+, else the overshot time
+    # @see #sleep
+    def sleep_millis(secs)
+      sleep(Duration.from_millis(secs))
+    end
+
     # Sugar for +#elapsed.to_s+.
     #
     # @see Duration#to_s
@@ -259,6 +298,38 @@ module Monotime
       @ns
     end
 
+    # Return true if this +Duration+ is positive.
+    #
+    # @return [Boolean]
+    def positive?
+      to_nanos.positive?
+    end
+
+    # Return true if this +Duration+ is negative.
+    #
+    # @return [Boolean]
+    def negative?
+      to_nanos.negative?
+    end
+
+    # Return true if this +Duration+ is zero.
+    #
+    # @return [Boolean]
+    def zero?
+      to_nanos.zero?
+    end
+
+    # Sleep for the duration of this +Duration+.  Equivalent to
+    # +Kernel.sleep(duration.to_secs)+.
+    #
+    # @raise [NotImplementedError] negative +Duration+ sleeps are not yet supported.
+    # @return [Integer]
+    # @see Instant#sleep
+    def sleep
+      raise NotImplementedError, 'time travel module missing' if negative?
+      Kernel.sleep(to_secs)
+    end
+
     DIVISORS = [
       [1_000_000_000.0, 's'],
       [1_000_000.0, 'ms'],
@@ -281,7 +352,7 @@ module Monotime
       ns = to_nanos.abs
       div, unit = DIVISORS.find { |d, _| ns >= d }
       ns /= div if div.nonzero?
-      num = format("#{'-' if to_nanos.negative?}%.#{precision}f", ns)
+      num = format("#{'-' if negative?}%.#{precision}f", ns)
       num.sub!(/\.?0*$/, '') if precision.nonzero?
       num << unit
     end

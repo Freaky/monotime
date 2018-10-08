@@ -54,6 +54,18 @@ class MonotimeTest < Minitest::Test
     assert_equal two_secs - one_sec, one_sec
   end
 
+  def test_sleeps
+    ten_ms = Duration.from_millis(10)
+    assert_includes 5..50, Duration.measure { ten_ms.sleep }.to_millis
+
+    t = Instant.now
+    a = t.sleep(ten_ms)
+    b = t.sleep(ten_ms)
+
+    assert_includes 5..50, a.to_millis
+    assert b.negative?
+  end
+
   def test_instant_hashing
     inst0 = Instant.now
     inst1 = inst0 + Duration.from_nanos(1)

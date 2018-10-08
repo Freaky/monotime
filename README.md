@@ -82,6 +82,35 @@ And how to do basic maths on itself:
 `Duration` and `Instant` are also `Comparable` with other instances of their
 type, and support `#hash` for use in, er, hashes.
 
+## Sleeping
+
+`Duration` can be used to sleep a thread, assuming it's positive (time travel
+is not yet implemented):
+
+```ruby
+# Equivalent
+sleep(Duration.from_secs(1).to_secs)  # => 1
+
+Duration.from_secs(1).sleep           # => 1
+```
+
+So can `Instant`, taking a `Duration` and sleeping until the given `Duration`
+past the time the `Instant` was created, if any.  This may be useful if you wish
+to maintain an approximate interval while performing work in between:
+
+```ruby
+poke_duration = Duration.from_secs(60)
+loop do
+  start = Instant.now
+  poke_my_api(api_to_poke, what_to_poke_it_with)
+  start.sleep(poke_duration)
+  # alternative: start.sleep_secs(60)
+end
+```
+
+`Instant#sleep` returns a `Duration` which was slept, or a negative `Duration` if
+the desired sleep period has passed.
+
 ## Duration duck typing
 
 Operations taking a `Duration` can also accept any type which implements
