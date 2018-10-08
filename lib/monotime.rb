@@ -45,7 +45,7 @@ module Monotime
       duration_since(self.class.now)
     end
 
-    # Sugar for +elapsed.to_s+.
+    # Sugar for +#elapsed.to_s+.
     #
     # @see Duration#to_s
     def to_s(*args)
