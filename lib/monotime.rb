@@ -80,8 +80,8 @@ module Monotime
     # @param millis [Numeric] number of milliseconds to sleep past this +Instant+
     # @return [Duration] the slept duration, if +#positive?+, else the overshot time
     # @see #sleep
-    def sleep_millis(secs)
-      sleep(Duration.from_millis(secs))
+    def sleep_millis(millis)
+      sleep(Duration.from_millis(millis))
     end
 
     # Sugar for +#elapsed.to_s+.
