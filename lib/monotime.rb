@@ -47,7 +47,7 @@ module Monotime
       duration_since(self.class.now)
     end
 
-    # Sleep for the given `Duration` past this +Instant+, if any.
+    # Sleep for the given +Duration+ past this +Instant+, if any.
     #
     # @example Sleeps for a second
     #   start = Instant.now
