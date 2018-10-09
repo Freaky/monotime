@@ -17,6 +17,7 @@ module Monotime
     # Users should generally *not* pass anything to this function.
     #
     # @param nanos [Integer]
+    # @see #now
     def initialize(nanos = Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond))
       @ns = Integer(nanos)
     end
@@ -94,6 +95,9 @@ module Monotime
     # Add a +Duration+ or +#to_nanos+-coercible object to this +Instant+, returning
     # a new +Instant+.
     #
+    # @example
+    #   (Instant.now + Duration.from_secs(1)).to_s # => "-999.983976ms"
+    #
     # @param other [Duration, #to_nanos]
     # @return [Instant]
     def +(other)
@@ -105,6 +109,10 @@ module Monotime
     # Subtract another +Instant+ to generate a +Duration+ between the two,
     # or a +Duration+ or +#to_nanos+-coercible object, to generate an +Instant+
     # offset by it.
+    #
+    # @example
+    #   (Instant.now - Duration.from_secs(1)).to_s # => "1.000016597s"
+    #   (Instant.now - Instant.now).to_s           # => "-3.87μs"
     #
     # @param other [Instant, Duration, #to_nanos]
     # @return [Duration, Instant]
@@ -152,7 +160,10 @@ module Monotime
     # Create a new +Duration+ of a specified number of nanoseconds, zero by
     # default.
     #
+    # Users are strongly advised to use +#from_nanos+ instead.
+    #
     # @param nanos [Integer]
+    # @see #from_nanos
     def initialize(nanos = 0)
       @ns = Integer(nanos)
     end
@@ -192,6 +203,9 @@ module Monotime
 
       # Return a +Duration+ measuring the elapsed time of the yielded block.
       #
+      # @example
+      #   Duration.measure { sleep(0.5) }.to_s # => "512.226109ms"
+      #
       # @return [Duration]
       def measure
         Instant.now.tap { yield }.elapsed
@@ -201,8 +215,10 @@ module Monotime
     # Add another +Duration+ or +#to_nanos+-coercible object to this one,
     # returning a new +Duration+.
     #
-    # @param [Duration, #to_nanos]
+    # @example
+    #   (Duration.from_secs(10) + Duration.from_secs(5)).to_s # => "15s"
     #
+    # @param [Duration, #to_nanos]
     # @return [Duration]
     def +(other)
       raise TypeError, 'Not one of: [Duration, #to_nanos]' unless other.respond_to?(:to_nanos)
@@ -212,6 +228,9 @@ module Monotime
 
     # Subtract another +Duration+ or +#to_nanos+-coercible object from this one,
     # returning a new +Duration+.
+    #
+    # @example
+    #   (Duration.from_secs(10) - Duration.from_secs(5)).to_s # => "5s"
     #
     # @param [Duration, #to_nanos]
     # @return [Duration]
@@ -223,6 +242,9 @@ module Monotime
 
     # Divide this duration by a +Numeric+.
     #
+    # @example
+    #   (Duration.from_secs(10) / 2).to_s # => "5s"
+    #
     # @param [Numeric]
     # @return [Duration]
     def /(other)
@@ -230,6 +252,9 @@ module Monotime
     end
 
     # Multiply this duration by a +Numeric+.
+    #
+    # @example
+    #   (Duration.from_secs(10) * 2).to_s # => "20s"
     #
     # @param [Numeric]
     # @return [Duration]
@@ -345,6 +370,10 @@ module Monotime
     # Sleep for the duration of this +Duration+.  Equivalent to
     # +Kernel.sleep(duration.to_secs)+.
     #
+    # @example
+    #   Duration.from_secs(1).sleep  # => 1
+    #   Duration.from_secs(-1).sleep # => raises NotImplementedError
+    #
     # @raise [NotImplementedError] negative +Duration+ sleeps are not yet supported.
     # @return [Integer]
     # @see Instant#sleep
@@ -367,6 +396,14 @@ module Monotime
     #
     # The exact format is subject to change, users with specific requirements
     # are encouraged to use their own formatting methods.
+    #
+    # @example
+    #   Duration.from_nanos(100).to_s  # => "100ns"
+    #   Duration.from_micros(100).to_s # => "100μs"
+    #   Duration.from_millis(100).to_s # => "100ms"
+    #   Duration.from_secs(100).to_s   # => "100s"
+    #   Duration.from_nanos(1234567).to_s # => "1.234567ms"
+    #   Duration.from_nanos(1234567).to_s(2) # => "1.23ms"
     #
     # @param precision [Integer] the maximum number of decimal places
     # @return [String]
