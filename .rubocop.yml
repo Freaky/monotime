@@ -1,2 +1,8 @@
 Metrics/LineLength:
   Max: 96
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/AccessModifierDeclarations:
+  Enabled: false

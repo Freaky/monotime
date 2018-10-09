@@ -8,7 +8,8 @@ module Monotime
   class Instant
     # A measurement, in nanoseconds.  Should be considered opaque and
     # non-portable outside the process that created it.
-    protected def ns() @ns end
+    attr_reader :ns
+    protected :ns
 
     include Comparable
 
