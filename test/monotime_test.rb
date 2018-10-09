@@ -77,7 +77,7 @@ class MonotimeTest < Minitest::Test
 
     assert_equal one_sec, minus_one_sec.abs
     assert_equal one_sec.abs, minus_one_sec.abs
-    assert_equal -one_sec, minus_one_sec
+    assert_equal(-one_sec, minus_one_sec)
     assert_equal one_sec, -minus_one_sec
   end
 
