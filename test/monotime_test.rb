@@ -71,6 +71,16 @@ class MonotimeTest < Minitest::Test
     assert b.negative?
   end
 
+  def test_duration_unary
+    one_sec = Duration.from_secs(1)
+    minus_one_sec = Duration.from_secs(-1)
+
+    assert_equal one_sec, minus_one_sec.abs
+    assert_equal one_sec.abs, minus_one_sec.abs
+    assert_equal -one_sec, minus_one_sec
+    assert_equal one_sec, -minus_one_sec
+  end
+
   def test_instant_hashing
     inst0 = Instant.now
     inst1 = inst0 + Duration.from_nanos(1)

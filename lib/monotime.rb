@@ -237,6 +237,29 @@ module Monotime
       Duration.new(to_nanos * other)
     end
 
+    # Unary minus: make a positive +Duration+ negative, and vice versa.
+    #
+    # @example
+    #   -Duration.from_secs(-1).to_s # => "1s"
+    #   -Duration.from_secs(1).to_s  # => "-1s"
+    #
+    # @return [Duration]
+    def -@
+      Duration.new(-to_nanos)
+    end
+
+    # Return a +Duration+ that's absolute (positive).
+    #
+    # @example
+    #   Duration.from_secs(-1).abs.to_s # => "1s"
+    #   Duration.from_secs(1).abs.to_s  # => "1s"
+    #
+    # @return [Duration]
+    def abs
+      return self if positive? || zero?
+      Duration.new(to_nanos.abs)
+    end
+
     # Compare the *value* of this +Duration+ with another, or any +#to_nanos+-coercible
     # object, or nil if not comparable.
     #
