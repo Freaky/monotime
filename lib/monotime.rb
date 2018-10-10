@@ -181,7 +181,7 @@ module Monotime
       # @param secs [Numeric]
       # @return [Duration]
       def from_secs(secs)
-        new(Integer(Float(secs) * 1_000_000_000))
+        new(Integer(secs * 1_000_000_000))
       end
 
       # Generate a new +Duration+ measuring the given number of milliseconds.
@@ -189,7 +189,7 @@ module Monotime
       # @param millis [Numeric]
       # @return [Duration]
       def from_millis(millis)
-        new(Integer(Float(millis) * 1_000_000))
+        new(Integer(millis * 1_000_000))
       end
 
       # Generate a new +Duration+ measuring the given number of microseconds.
@@ -197,7 +197,7 @@ module Monotime
       # @param micros [Numeric]
       # @return [Duration]
       def from_micros(micros)
-        new(Integer(Float(micros) * 1_000))
+        new(Integer(micros * 1_000))
       end
 
       # Generate a new +Duration+ measuring the given number of nanoseconds.
