@@ -416,12 +416,13 @@ module Monotime
     # @return [String]
     def to_s(precision = 9)
       precision = Integer(precision).abs
-      ns = to_nanos.abs
-      div, unit = DIVISORS.find { |d, _| ns >= d }
-      ns /= div if div.nonzero?
-      num = format("#{'-' if negative?}%.#{precision}f", ns)
-      num.sub!(/\.?0*$/, '') if precision.nonzero?
-      num << unit
+      div, unit = DIVISORS.find { |d, _| to_nanos.abs >= d }
+
+      if div.zero?
+        format('%d%s', to_nanos, unit)
+      else
+        format("%#.#{precision}f", to_nanos / div).sub(/\.?0*\z/, '') << unit
+      end
     end
   end
 end

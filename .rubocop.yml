@@ -6,3 +6,6 @@ Style/AsciiComments:
 
 Style/AccessModifierDeclarations:
   Enabled: false
+
+Style/FormatStringToken:
+  Enabled: false
