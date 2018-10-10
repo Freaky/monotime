@@ -66,6 +66,8 @@ class MonotimeTest < Minitest::Test
 
     b = t.sleep(ten_ms)
 
+    assert((t + ten_ms).sleep.negative?)
+
     assert_includes 5..50, a.to_millis
     assert a > b
     assert b.negative?
