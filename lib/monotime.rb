@@ -47,7 +47,9 @@ module Monotime
       duration_since(self.class.now)
     end
 
-    # Sleep for the given +Duration+ past this +Instant+, if any.
+    # Sleep until this +Instant+, plus an optional +Duration+, returning a +Duration+
+    # that's either positive if any time was slept, or negative if sleeping would
+    # require time travel.
     #
     # @example Sleeps for a second
     #   start = Instant.now
@@ -55,13 +57,17 @@ module Monotime
     #   start.sleep(Duration.from_secs(1)).to_s # => "490.088706ms" (slept)
     #   start.sleep(Duration.from_secs(1)).to_s # => "-12.963502ms" (did not sleep)
     #
-    # @param duration [Duration, #to_nanos]
+    # @example Also sleeps for a second.
+    #   one_second_in_the_future = Instant.now + Duration.from_secs(1)
+    #   one_second_in_the_future.sleep.to_s     # => "985.592712ms" (slept)
+    #   one_second_in_the_future.sleep.to_s     # => "-4.71217ms" (did not sleep)
+    #
+    # @param duration [nil, Duration, #to_nanos]
     # @return [Duration] the slept duration, if +#positive?+, else the overshot time
-    def sleep(duration)
-      remaining = duration - elapsed
+    def sleep(duration = nil)
+      remaining = duration ? duration - elapsed : -elapsed
 
-      return remaining unless remaining.positive?
-      remaining.tap(&:sleep)
+      remaining.tap { |rem| rem.sleep if rem.positive? }
     end
 
     # Sleep for the given number of seconds past this +Instant+, if any.
