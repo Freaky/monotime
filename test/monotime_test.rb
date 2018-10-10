@@ -137,7 +137,15 @@ class MonotimeTest < Minitest::Test
     assert_equal '1.3μs', Duration.from_micros(1.26).to_s(1)
     assert_equal '2μs', Duration.from_micros(1.6).to_s(0)
 
+    assert_equal '-1μs', Duration.from_micros(-1).to_s
+    assert_equal '-1.5μs', Duration.from_micros(-1.5).to_s
+    assert_equal '-1.25μs', Duration.from_micros(-1.25).to_s
+    assert_equal '-1.2μs', Duration.from_micros(-1.25).to_s(1)
+    assert_equal '-1.3μs', Duration.from_micros(-1.26).to_s(1)
+    assert_equal '-2μs', Duration.from_micros(-1.6).to_s(0)
+
     assert_equal '1ns', Duration.from_nanos(1).to_s
+    assert_equal '-1ns', Duration.from_nanos(-1).to_s
   end
 
   def test_duration_format_zero_stripping
