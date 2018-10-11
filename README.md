@@ -108,6 +108,14 @@ loop do
 end
 ```
 
+Or you can declare a future `Instant` and ask to sleep until it passes:
+
+```ruby
+next_minute = Instant.now + Duration.from_secs(60)
+do_stuff
+next_minute.sleep # => sleeps any remaining seconds
+```
+
 `Instant#sleep` returns a `Duration` which was slept, or a negative `Duration` if
 the desired sleep period has passed.
 
