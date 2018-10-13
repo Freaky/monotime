@@ -22,6 +22,8 @@ class MonotimeTest < Minitest::Test
     assert(a < a + dur)
     assert(a > a - dur)
     refute_equal a, a + dur
+    assert a.eql?(a + Duration.from_nanos(0))
+    refute a.eql?(a + Duration.from_nanos(1))
   end
 
   def test_instant_elapsed
@@ -36,8 +38,17 @@ class MonotimeTest < Minitest::Test
   def test_duration_equality
     a = Duration.from_secs(1)
     b = Duration.from_secs(2)
+    duck_a = Class.new { def to_nanos() Duration.from_secs(1).to_nanos end }.new
+
     assert_equal a, Duration.from_secs(1)
     assert_equal a.hash, Duration.from_secs(1).hash
+    assert a.eql?(Duration.from_secs(1))
+
+    assert_equal a, duck_a
+    refute_equal b, duck_a
+    refute a.eql?(duck_a)
+    refute b.eql?(duck_a)
+
     refute_equal a, b
     assert a < b
     assert b > a
