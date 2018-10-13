@@ -54,6 +54,14 @@ class MonotimeTest < Minitest::Test
     assert b > a
   end
 
+  def test_duration_conversions
+    secs = Duration.from_secs(10)
+    assert_equal secs, Duration.from_secs(secs.to_secs)
+    assert_equal secs, Duration.from_millis(secs.to_millis)
+    assert_equal secs, Duration.from_micros(secs.to_micros)
+    assert_equal secs, Duration.from_nanos(secs.to_nanos)
+  end
+
   def test_duration_maths
     one_sec = Duration.from_secs(1)
     two_secs = Duration.from_secs(2)
