@@ -45,10 +45,12 @@
 ### Changed
  - Switch to microseconds internally.
  - `Duration#to_{secs,millis,micros}` now return a `Float`.
- - `Duration#to_micros` returns microseconds, not picoseconds.
- - Fixed `Instant#-` argument ordering with other `Instant`.
  - `Instant#ns` is now `protected`.
- - Fixed `Duration#to_s` zero-stripping with precision=0.
+
+### Fixed
+ - `Duration#to_s` zero-stripping with precision=0.
+ - `Instant#-` argument ordering with other `Instant`.
+ - `Duration#to_micros` returns microseconds, not picoseconds.
 
 ### Removed
  - `Instant` and `Duration` maths methods no longer support passing an `Integer`
