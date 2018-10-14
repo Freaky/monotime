@@ -154,7 +154,7 @@ module Monotime
 
     # Generate a hash for this type and value.
     #
-    # @return [Fixnum]
+    # @return [Integer]
     def hash
       self.class.hash ^ @ns.hash
     end
@@ -320,7 +320,7 @@ module Monotime
 
     # Generate a hash for this type and value.
     #
-    # @return [Fixnum]
+    # @return [Integer]
     def hash
       self.class.hash ^ to_nanos.hash
     end
