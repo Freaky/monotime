@@ -184,6 +184,8 @@ module Monotime
         new(Integer(secs * 1_000_000_000))
       end
 
+      alias secs from_secs
+
       # Generate a new +Duration+ measuring the given number of milliseconds.
       #
       # @param millis [Numeric]
@@ -191,6 +193,8 @@ module Monotime
       def from_millis(millis)
         new(Integer(millis * 1_000_000))
       end
+
+      alias millis from_millis
 
       # Generate a new +Duration+ measuring the given number of microseconds.
       #
@@ -200,6 +204,8 @@ module Monotime
         new(Integer(micros * 1_000))
       end
 
+      alias micros from_micros
+
       # Generate a new +Duration+ measuring the given number of nanoseconds.
       #
       # @param nanos [Numeric]
@@ -207,6 +213,8 @@ module Monotime
       def from_nanos(nanos)
         new(Integer(nanos))
       end
+
+      alias nanos from_nanos
 
       # Return a +Duration+ measuring the elapsed time of the yielded block.
       #
@@ -332,12 +340,16 @@ module Monotime
       to_nanos / 1_000_000_000.0
     end
 
+    alias secs to_secs
+
     # Return this +Duration+ in milliseconds.
     #
     # @return [Float]
     def to_millis
       to_nanos / 1_000_000.0
     end
+
+    alias millis to_millis
 
     # Return this +Duration+ in microseconds.
     #
@@ -346,12 +358,16 @@ module Monotime
       to_nanos / 1_000.0
     end
 
+    alias micros to_micros
+
     # Return this +Duration+ in nanoseconds.
     #
     # @return [Integer]
     def to_nanos
       @ns
     end
+
+    alias nanos to_nanos
 
     # Return true if this +Duration+ is positive.
     #

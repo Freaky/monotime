@@ -60,6 +60,11 @@ class MonotimeTest < Minitest::Test
     assert_equal secs, Duration.from_millis(secs.to_millis)
     assert_equal secs, Duration.from_micros(secs.to_micros)
     assert_equal secs, Duration.from_nanos(secs.to_nanos)
+
+    assert_equal secs, Duration.secs(secs.secs)
+    assert_equal secs, Duration.millis(secs.millis)
+    assert_equal secs, Duration.micros(secs.micros)
+    assert_equal secs, Duration.nanos(secs.nanos)
   end
 
   def test_duration_maths
