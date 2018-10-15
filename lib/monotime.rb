@@ -390,6 +390,13 @@ module Monotime
       to_nanos.zero?
     end
 
+    # Return true if this +Duration+ is non-zero.
+    #
+    # @return [Boolean]
+    def nonzero?
+      to_nanos.nonzero?
+    end
+
     # Sleep for the duration of this +Duration+.  Equivalent to
     # +Kernel.sleep(duration.to_secs)+.
     #

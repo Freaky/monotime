@@ -6,11 +6,15 @@
  - Aliases for `Duration.from_*` and `Duration#to_*` without the prefix.  e.g.
    `Duration.from_secs(42).to_secs == 42` can now be written as
    `Duration.secs(42).secs == 42`.
+ - `Duration#nonzero?`
 
 ## [0.5.0] - 2018-10-13
 ### Added
  - `Duration#abs` to make a `Duration` positive.
  - `Duration#-@` to invert the sign of a `Duration`.
+ - `Duration#positive?`
+ - `Duration#negative?`
+ - `Duration#zero?`
 
 ### Changed
  - `Instant#sleep` with no argument now sleeps until the `Instant`.
