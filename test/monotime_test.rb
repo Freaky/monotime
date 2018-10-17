@@ -95,6 +95,10 @@ class MonotimeTest < Minitest::Test
     assert_includes 5..50, a.to_millis
     assert a > b
     assert b.negative?
+
+    # Quick check of aliases
+    assert_includes 5..50, Instant.now.sleep_millis(10).to_millis
+    assert_includes 5..50, Instant.now.sleep_secs(0.01).to_millis
   end
 
   def test_duration_unary
