@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.6.1] - 2018-10-27
+### Fixed
+ - Build gem from a clean git checkout, not my local development directory.
+   No functional changes.
+
 ## [0.6.0] - 2018-10-26
 ### Added
  - This `CHANGELOG.md` by request of [@celsworth].
@@ -75,4 +80,5 @@
 [0.4.0]: https://github.com/Freaky/monotime/commits/v0.4.0
 [0.5.0]: https://github.com/Freaky/monotime/commits/v0.5.0
 [0.6.0]: https://github.com/Freaky/monotime/commits/v0.6.0
+[0.6.1]: https://github.com/Freaky/monotime/commits/v0.6.1
 [@celsworth]: https://github.com/celsworth
