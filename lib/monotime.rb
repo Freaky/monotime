@@ -47,6 +47,24 @@ module Monotime
       duration_since(self.class.now)
     end
 
+    # Return whether this +Instant+ is in the past.
+    #
+    # @return [Boolean]
+    def in_past?
+      elapsed.positive?
+    end
+
+    alias past? in_past?
+
+    # Return whether this +Instant+ is in the future.
+    #
+    # @return [Boolean]
+    def in_future?
+      elapsed.negative?
+    end
+
+    alias future? in_future?
+
     # Sleep until this +Instant+, plus an optional +Duration+, returning a +Duration+
     # that's either positive if any time was slept, or negative if sleeping would
     # require time travel.

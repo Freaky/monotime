@@ -26,6 +26,17 @@ class MonotimeTest < Minitest::Test
     refute a.eql?(a + Duration.from_nanos(1))
   end
 
+  def test_instant_past_future
+    past = Instant.now - Duration.secs(1)
+
+    assert past.in_past?
+    refute past.in_future?
+
+    future = Instant.now + Duration.secs(1)
+    assert future.in_future?
+    refute future.in_past?
+  end
+
   def test_instant_elapsed
     a = Instant.now
     sleep 0.01

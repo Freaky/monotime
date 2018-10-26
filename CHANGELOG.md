@@ -6,7 +6,8 @@
  - Aliases for `Duration.from_*` and `Duration#to_*` without the prefix.  e.g.
    `Duration.from_secs(42).to_secs == 42` can now be written as
    `Duration.secs(42).secs == 42`.
- - `Duration#nonzero?`
+ - `Duration#nonzero?`.
+ - `Instant#in_past?` and `Instant#in_future?`.
 
 ## [0.5.0] - 2018-10-13
 ### Added
