@@ -39,6 +39,17 @@ class MonotimeTest < Minitest::Test
     refute future.in_past?
   end
 
+  def test_duration_zeros
+    z = Duration.from_nanos(0)
+    nz = Duration.from_nanos(1)
+
+    assert z.zero?
+    refute nz.zero?
+
+    refute z.nonzero?
+    assert nz.nonzero?
+  end
+
   def test_instant_elapsed
     a = Instant.now
     sleep 0.01
