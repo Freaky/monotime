@@ -1,6 +1,6 @@
 # Changelog
 
-## ?.?.? - unreleased
+## [0.6.0] - 2018-10-26
 ### Added
  - This `CHANGELOG.md` by request of [@celsworth].
  - Aliases for `Duration.from_*` and `Duration#to_*` without the prefix.  e.g.
@@ -74,4 +74,5 @@
 [0.3.0]: https://github.com/Freaky/monotime/commits/v0.3.0
 [0.4.0]: https://github.com/Freaky/monotime/commits/v0.4.0
 [0.5.0]: https://github.com/Freaky/monotime/commits/v0.5.0
+[0.6.0]: https://github.com/Freaky/monotime/commits/v0.6.0
 [@celsworth]: https://github.com/celsworth
