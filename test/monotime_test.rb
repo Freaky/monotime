@@ -24,6 +24,8 @@ class MonotimeTest < Minitest::Test
     refute_equal a, a + dur
     assert a.eql?(a + Duration.from_nanos(0))
     refute a.eql?(a + Duration.from_nanos(1))
+
+    assert_nil a <=> 'meep'
   end
 
   def test_instant_past_future
@@ -63,6 +65,8 @@ class MonotimeTest < Minitest::Test
     refute_equal a, b
     assert a < b
     assert b > a
+
+    assert_nil a <=> 'meep'
   end
 
   def test_duration_conversions
