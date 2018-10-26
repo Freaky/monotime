@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.6.1] - 2018-10-27
+## [0.6.1] - 2018-10-26
 ### Fixed
  - Build gem from a clean git checkout, not my local development directory.
    No functional changes.
