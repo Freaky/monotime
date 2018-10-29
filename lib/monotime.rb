@@ -315,6 +315,7 @@ module Monotime
     # @return [Duration]
     def abs
       return self if positive? || zero?
+
       Duration.new(to_nanos.abs)
     end
 
@@ -427,6 +428,7 @@ module Monotime
     # @see Instant#sleep
     def sleep
       raise NotImplementedError, 'time travel module missing' if negative?
+
       Kernel.sleep(to_secs)
     end
 
