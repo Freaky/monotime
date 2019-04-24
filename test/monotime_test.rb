@@ -104,6 +104,14 @@ class MonotimeTest < Minitest::Test
     assert_equal two_secs - one_sec, one_sec
   end
 
+  def test_duration_measure
+    ten_ms = Duration.from_millis(10)
+    assert_includes 5..50, Duration.measure { ten_ms.sleep }.to_millis
+    res, elapsed = Duration.with_measure { "bloop" }
+    assert_equal "bloop", res
+    assert_instance_of Duration, elapsed
+  end
+
   def test_sleeps
     ten_ms = Duration.from_millis(10)
 

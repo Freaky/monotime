@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.7.0] - 2019-04-24
+### Added
+ - `Duration.with_measure`, as `Duration.measure` but returning an array of the
+   return value of the yielded block alongside the `Duration`.
+
 ## [0.6.1] - 2018-10-26
 ### Fixed
  - Build gem from a clean git checkout, not my local development directory.

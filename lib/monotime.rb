@@ -243,6 +243,18 @@ module Monotime
       def measure
         Instant.now.tap { yield }.elapsed
       end
+
+      # Return the result of the yielded block alongside a +Duration+.
+      #
+      # @example
+      #   Duration.with_measure { "bloop" } # => ["bloop", #<Monotime::Duration: ...>]
+      #
+      # @return [Object, Duration]
+      def with_measure
+        start = Instant.now
+        ret = yield
+        [ret, start.elapsed]
+      end
     end
 
     # Add another +Duration+ or +#to_nanos+-coercible object to this one,
