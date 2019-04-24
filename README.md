@@ -157,12 +157,18 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## See Also
 
+### Core Ruby
+
 For a zero-dependency alternative, see the core function
 [`Process.clock_gettime`](https://ruby-doc.org/core-2.6.3/Process.html#method-c-clock_gettime).
 `monotime` currently only uses `Process::CLOCK_MONOTONIC`, but others may offer higher precision
 depending on platform.
 
+### Other Gems
+
 [hitimes](https://rubygems.org/gems/hitimes) is a popular and mature alternative
 which also includes a variety of features for gathering statistics about
-measurements, and may offer higher precision on some platforms, but currently
-depends on its own custom timer implementations.
+measurements, and may offer higher precision on some platforms.
+
+Note until [#73](https://github.com/copiousfreetime/hitimes/pull/73) is closed it
+depends on compiled C/Java extensions.
