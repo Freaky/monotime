@@ -2,12 +2,15 @@
 
 ## [0.7.0] - 2019-04-24
 ### Added
- - `Duration.with_measure`, as `Duration.measure` but returning an array of the
-   return value of the yielded block alongside the `Duration`.
+ - `Duration.with_measure`, which yields and returns an array containing its
+   evaluated return value and its `Duration`.
 
 ### Changed
- - Rename `Monotime::VERSION` to `Monotime::MONOTIME_VERSION` to reduce potential
-   for collision if the module is included.
+ - Break `Duration` and `Instant` into their own files.
+ - Rename `Monotime::VERSION` to `Monotime::MONOTIME_VERSION` to reduce
+   potential for collision if the module is included.
+ - Update to bundler 2.0.
+ - Rework README.md.  Includes fix for [issue #1] (added a "See Also" section).
 
 ## [0.6.1] - 2018-10-26
 ### Fixed
@@ -90,4 +93,6 @@
 [0.5.0]: https://github.com/Freaky/monotime/commits/v0.5.0
 [0.6.0]: https://github.com/Freaky/monotime/commits/v0.6.0
 [0.6.1]: https://github.com/Freaky/monotime/commits/v0.6.1
+[0.7.0]: https://github.com/Freaky/monotime/commits/v0.7.0
+[issue #1]: https://github.com/Freaky/monotime/issues/1
 [@celsworth]: https://github.com/celsworth
