@@ -1,5 +1,16 @@
+AllCops:
+  Exclude:
+    - "bin/*"
+    - "test/*"
+    - "*.gemspec"
+    - "Rakefile"
+    - "Gemfile"
+
 Metrics/LineLength:
   Max: 96
+
+Metrics/ClassLength:
+  Max: 120
 
 Style/AsciiComments:
   Enabled: false
