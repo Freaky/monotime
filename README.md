@@ -161,7 +161,7 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ### Core Ruby
 
-For a zero-dependency alternative, see the core function
+For a zero-dependency alternative, see
 [`Process.clock_gettime`](https://ruby-doc.org/core-2.6.3/Process.html#method-c-clock_gettime).
 `monotime` currently only uses `Process::CLOCK_MONOTONIC`, but others may offer higher precision
 depending on platform.
