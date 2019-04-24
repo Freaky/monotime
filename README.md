@@ -23,19 +23,13 @@ Or install it yourself as:
 
 ## Usage
 
-The typical way everyone does "correct" elapsed-time measurements in Ruby is
-this pile of nonsense:
+`Monotime` offers a `Duration` type for describing spans of time, and an
+`Instant` type for describing points in time.  Both operate at nanosecond
+resolution to the limits of whatever your Ruby implementation supports.
 
-```ruby
-start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-do_something
-elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
-```
-
-Not only is it long-winded, it's imprecise, converting to floating point instead
-of working off precise timestamps.
-
-`Monotime` offers this alternative:
+For example, to measure an elapsed time, either create an `Instant` to mark the
+start point, perform the action and then ask for the `Duration` that has elapsed
+since:
 
 ```ruby
 include Monotime
@@ -43,44 +37,54 @@ include Monotime
 start = Instant.now
 do_something
 elapsed = start.elapsed
+```
+
+Or use a convenience method:
+
+```ruby
+elapsed = Duration.measure { do_something }
 
 # or
-elapsed = Duration.measure { do_something }
+
+return_value, elapsed = Duration.with_measure { compute_something }
 ```
 
-`elapsed` is not a dimensionless `Float`, but a `Duration` type, and internally
-both `Instant` and `Duration` operate in *nanoseconds* to most closely match
-the native timekeeping types used by most operating systems.
-
-`Duration` knows how to format itself:
+`Duration` offers formatting:
 
 ```ruby
-Duration.from_millis(42).to_s       # => "42ms"
-Duration.from_nanos(12345).to_s     # => "12.345μs"
-Duration.from_secs(1.12345).to_s(2) # => "1.12s"
+Duration.millis(42).to_s       # => "42ms"
+Duration.nanos(12345).to_s     # => "12.345μs"
+Duration.secs(1.12345).to_s(2) # => "1.12s"
 ```
 
-And how to do basic maths on itself:
+Conversions:
 
 ```ruby
-(Duration.from_millis(42) + Duration.from_secs(1)).to_s  # => "1.042s"
-(Duration.from_millis(42) - Duration.from_secs(1)).to_s  # => "-958ms"
-(Duration.from_secs(42) * 2).to_s                        # => "84s"
-(Duration.from_secs(42) / 2).to_s                        # => "21s"
+Duration.secs(10).millis    # => 10000.0
+Duration.micros(12345).secs # => 0.012345
+```
+
+And basic mathematical operations:
+
+```ruby
+(Duration.millis(42) + Duration.secs(1)).to_s  # => "1.042s"
+(Duration.millis(42) - Duration.secs(1)).to_s  # => "-958ms"
+(Duration.secs(42) * 2).to_s                   # => "84s"
+(Duration.secs(42) / 2).to_s                   # => "21s"
 ```
 
 `Instant` does some simple maths too:
 
 ```ruby
 # Instant - Duration => Instant
-(Instant.now - Duration.from_secs(1)).elapsed.to_s # => "1.000014627s"
+(Instant.now - Duration.secs(1)).elapsed.to_s      # => "1.000014627s"
 
 # Instant - Instant => Duration
 (Instant.now - Instant.now).to_s                   # => "-5.585μs"
 ```
 
 `Duration` and `Instant` are also `Comparable` with other instances of their
-type, and support `#hash` for use in, er, hashes.
+type, and can be used in hashes, sets, and similar structures.
 
 ## Sleeping
 
@@ -89,9 +93,9 @@ is not yet implemented):
 
 ```ruby
 # Equivalent
-sleep(Duration.from_secs(1).to_secs)  # => 1
+sleep(Duration.secs(1).secs)  # => 1
 
-Duration.from_secs(1).sleep           # => 1
+Duration.secs(1).sleep           # => 1
 ```
 
 So can `Instant`, taking a `Duration` and sleeping until the given `Duration`
@@ -99,7 +103,7 @@ past the time the `Instant` was created, if any.  This may be useful if you wish
 to maintain an approximate interval while performing work in between:
 
 ```ruby
-poke_duration = Duration.from_secs(60)
+poke_duration = Duration.secs(60)
 loop do
   start = Instant.now
   poke_my_api(api_to_poke, what_to_poke_it_with)
@@ -111,13 +115,13 @@ end
 Or you can declare a future `Instant` and ask to sleep until it passes:
 
 ```ruby
-next_minute = Instant.now + Duration.from_secs(60)
+next_minute = Instant.now + Duration.secs(60)
 do_stuff
 next_minute.sleep # => sleeps any remaining seconds
 ```
 
-`Instant#sleep` returns a `Duration` which was slept, or a negative `Duration` if
-the desired sleep period has passed.
+`Instant#sleep` returns a `Duration` which was slept, or a negative `Duration`
+if the desired sleep period has passed.
 
 ## Duration duck typing
 
@@ -133,8 +137,8 @@ class Numeric
   end
 end
 
-(Duration.from_secs(1) + 41).to_s  # => "42s"
-(Instant.now - 42).to_s            # => "42.000010545s"
+(Duration.secs(1) + 41).to_s  # => "42s"
+(Instant.now - 42).to_s       # => "42.000010545s"
 ```
 
 ## Development
