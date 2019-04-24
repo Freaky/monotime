@@ -4,7 +4,7 @@ class MonotimeTest < Minitest::Test
   include Monotime
 
   def test_that_it_has_a_version_number
-    refute_nil ::Monotime::VERSION
+    refute_nil ::Monotime::MONOTIME_VERSION
   end
 
   def test_instant_monotonic

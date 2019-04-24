@@ -5,7 +5,7 @@ require "monotime/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "monotime"
-  spec.version       = Monotime::VERSION
+  spec.version       = Monotime::MONOTIME_VERSION
   spec.authors       = ["Thomas Hurst"]
   spec.email         = ["tom@hur.st"]
 

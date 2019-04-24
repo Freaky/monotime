@@ -5,6 +5,10 @@
  - `Duration.with_measure`, as `Duration.measure` but returning an array of the
    return value of the yielded block alongside the `Duration`.
 
+### Changed
+ - Rename `Monotime::VERSION` to `Monotime::MONOTIME_VERSION` to reduce potential
+   for collision if the module is included.
+
 ## [0.6.1] - 2018-10-26
 ### Fixed
  - Build gem from a clean git checkout, not my local development directory.
