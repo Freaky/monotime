@@ -23,6 +23,8 @@ Or install it yourself as:
 
     $ gem install monotime
 
+`Monotime` is tested on Ruby 2.4&mdash;2.6 and recent JRuby 9.x releases.
+
 ## Usage
 
 `Monotime` offers a `Duration` type for describing spans of time, and an
