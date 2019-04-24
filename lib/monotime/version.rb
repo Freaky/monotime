@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
 module Monotime
-	# Try to avoid blatting existing VERSION constants when we're included.
+  # Try to avoid blatting existing VERSION constants when we're included.
   MONOTIME_VERSION = '0.6.1'
 end
