@@ -59,6 +59,10 @@ class MonotimeTest < Minitest::Test
     assert elapsed <= Duration.from_secs(0.02)
   end
 
+  def test_instant_to_s
+    assert_match(/\A\d+.s\z/, Instant.now.to_s(0))
+  end
+
   def test_duration_equality
     a = Duration.from_secs(1)
     b = Duration.from_secs(2)
@@ -110,6 +114,13 @@ class MonotimeTest < Minitest::Test
     res, elapsed = Duration.with_measure { "bloop" }
     assert_equal "bloop", res
     assert_instance_of Duration, elapsed
+  end
+
+  def test_type_errors
+    assert_raises(TypeError) { Instant.now.duration_since(0) }
+    assert_raises(TypeError) { Instant.now - 0 }
+    assert_raises(TypeError) { Duration.secs(1) + 0 }
+    assert_raises(TypeError) { Duration.secs(1) - 0 }
   end
 
   def test_sleeps

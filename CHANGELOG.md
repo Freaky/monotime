@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.1 - unreleased
+### Added
+ - `simplecov` introduced to test suite.
+
+### Changed
+ - Increase reported test suite coverage from 98.44% to 100%.
+ - Update development dependency on `rake`.
+
 ## [0.7.0] - 2019-04-24
 ### Added
  - `Duration.with_measure`, which yields and returns an array containing its
