@@ -1,4 +1,5 @@
 AllCops:
+  NewCops: enable
   Exclude:
     - "bin/*"
     - "test/*"
@@ -6,7 +7,7 @@ AllCops:
     - "Rakefile"
     - "Gemfile"
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 96
 
 Metrics/ClassLength:
@@ -19,4 +20,16 @@ Style/AccessModifierDeclarations:
   Enabled: false
 
 Style/FormatStringToken:
+  Enabled: false
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Style/ExplicitBlockArgument:
   Enabled: false
