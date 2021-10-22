@@ -27,6 +27,13 @@ Or install it yourself as:
 
 ## Usage
 
+```ruby
+require 'monotime'
+# or, to automatically include Monotime::* in the global scope,
+# as used by these examples:
+require 'monotime/include'
+```
+
 `Monotime` offers a `Duration` type for describing spans of time, and an
 `Instant` type for describing points in time.  Both operate at nanosecond
 resolution to the limits of whatever your Ruby implementation supports.
@@ -36,8 +43,6 @@ start point, perform the action and then ask for the `Duration` that has elapsed
 since:
 
 ```ruby
-include Monotime
-
 start = Instant.now
 do_something
 elapsed = start.elapsed

@@ -33,3 +33,6 @@ Style/HashTransformValues:
 
 Style/ExplicitBlockArgument:
   Enabled: false
+
+Style/MixinUsage:
+  Enabled: false
