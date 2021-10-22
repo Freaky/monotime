@@ -52,9 +52,7 @@ Or use a convenience method:
 
 ```ruby
 elapsed = Duration.measure { do_something }
-
 # or
-
 return_value, elapsed = Duration.with_measure { compute_something }
 ```
 
