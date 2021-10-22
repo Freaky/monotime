@@ -23,7 +23,7 @@ Or install it yourself as:
 
     $ gem install monotime
 
-`Monotime` is tested on Ruby 2.4&mdash;2.6 and recent JRuby 9.x releases.
+`Monotime` is tested on Ruby 2.5&mdash;3.0 and recent JRuby 9.x releases.
 
 ## Usage
 
@@ -98,34 +98,37 @@ is not yet implemented):
 ```ruby
 # Equivalent
 sleep(Duration.secs(1).secs)  # => 1
-
-Duration.secs(1).sleep           # => 1
+Duration.secs(1).sleep        # => 1
 ```
 
 So can `Instant`, taking a `Duration` and sleeping until the given `Duration`
-past the time the `Instant` was created, if any.  This may be useful if you wish
-to maintain an approximate interval while performing work in between:
+past the time the `Instant` was created, if any. This can be useful for
+maintaining a precise candence between tasks:
 
 ```ruby
-poke_duration = Duration.secs(60)
+interval = Duration.secs(60)
+start = Instant.now
 loop do
-  start = Instant.now
-  poke_my_api(api_to_poke, what_to_poke_it_with)
-  start.sleep(poke_duration) # sleeps 60 seconds minus how long poke_my_api took
-  # alternative: start.sleep_secs(60)
+  do_stuff
+  start.sleep(interval)
+  start += interval
 end
 ```
 
-Or you can declare a future `Instant` and ask to sleep until it passes:
+Or you can declare an `Instant` in the future and sleep to that point:
 
 ```ruby
-next_minute = Instant.now + Duration.secs(60)
-do_stuff
-next_minute.sleep # => sleeps any remaining seconds
+interval = Duration.secs(60)
+deadline = Instant.now + interval
+loop do
+  do_stuff
+  deadline.sleep
+  deadline += interval
+end
 ```
 
 `Instant#sleep` returns a `Duration` which was slept, or a negative `Duration`
-if the desired sleep period has passed.
+indicating that the desired sleep point was in the past.
 
 ## Duration duck typing
 
@@ -174,5 +177,3 @@ depending on platform.
 which also includes a variety of features for gathering statistics about
 measurements, and may offer higher precision on some platforms.
 
-Note until [#73](https://github.com/copiousfreetime/hitimes/pull/73) is closed it
-depends on compiled C/Java extensions.
