@@ -1,11 +1,13 @@
 # Changelog
 
-## 0.7.1 - unreleased
+## 0.7.1 - 2021-10-22
 ### Added
  - `simplecov` introduced to test suite.
+ - `monotime/include.rb` to auto-include types globally.
 
 ### Changed
- - Increase reported test suite coverage from 98.44% to 100%.
+ - All `Instant` and `Duration` instances are now frozen.
+ - Migrate from Travis CI to Github Actions
  - Update development dependency on `rake`.
 
 ## [0.7.0] - 2019-04-24
