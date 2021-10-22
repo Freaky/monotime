@@ -1,5 +1,5 @@
 [![Gem Version](https://badge.fury.io/rb/monotime.svg)](https://badge.fury.io/rb/monotime)
-[![Build Status](https://travis-ci.org/Freaky/monotime.svg?branch=master)](https://travis-ci.org/Freaky/monotime)
+![Build Status](https://github.com/Freaky/monotime/actions/workflows/ci.yml/badge.svg)
 [![Inline docs](http://inch-ci.org/github/Freaky/monotime.svg?branch=master)](http://inch-ci.org/github/Freaky/monotime)
 [![Yard Docs](http://img.shields.io/badge/yard-docs-blue.svg)](https://www.rubydoc.info/gems/monotime)
 
