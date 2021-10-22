@@ -19,6 +19,7 @@ module Monotime
     # @see #now
     def initialize(nanos = Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond))
       @ns = Integer(nanos)
+      freeze
     end
 
     # An alias to +new+, and generally preferred over it.

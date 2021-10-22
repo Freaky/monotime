@@ -14,6 +14,7 @@ module Monotime
     # @see #from_nanos
     def initialize(nanos = 0)
       @ns = Integer(nanos)
+      freeze
     end
 
     class << self
