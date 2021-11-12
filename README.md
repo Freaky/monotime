@@ -106,7 +106,7 @@ Duration.secs(1).sleep        # => 1
 
 So can `Instant`, taking a `Duration` and sleeping until the given `Duration`
 past the time the `Instant` was created, if any. This can be useful for
-maintaining a precise candence between tasks:
+maintaining a precise cadence between tasks:
 
 ```ruby
 interval = Duration.secs(60)
