@@ -23,7 +23,7 @@ Or install it yourself as:
 
     $ gem install monotime
 
-`Monotime` is tested on Ruby 2.5&mdash;3.0 and recent JRuby 9.x releases.
+`Monotime` is tested on Ruby 2.5&mdash;3.1, TruffleRuby, and recent JRuby 9.x releases.
 
 ## Usage
 
