@@ -1,7 +1,9 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
-require 'simplecov'
-SimpleCov.start
+unless RUBY_ENGINE=='truffleruby'
+  require 'simplecov'
+  SimpleCov.start
+end
 
 require 'monotime'
 
