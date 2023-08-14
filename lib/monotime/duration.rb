@@ -5,6 +5,21 @@ module Monotime
   class Duration
     include Comparable
 
+    class << self
+      # The sleep function used by all +Monotime+ sleep functions.
+      #
+      # This defaults to +Kernel::sleep+
+      attr_accessor :sleep_function
+
+      # Default precision for +to_s+
+      #
+      # Defaults to 9
+      attr_accessor :default_to_s_precision
+    end
+
+    self.sleep_function = Kernel.method(:sleep)
+    self.default_to_s_precision = 9
+
     # Create a new +Duration+ of a specified number of nanoseconds, zero by
     # default.
     #
@@ -265,7 +280,7 @@ module Monotime
     def sleep
       raise NotImplementedError, 'time travel module missing' if negative?
 
-      Kernel.sleep(to_secs)
+      self.class.sleep_function.call(to_secs)
     end
 
     DIVISORS = [
@@ -293,7 +308,7 @@ module Monotime
     #
     # @param precision [Integer] the maximum number of decimal places
     # @return [String]
-    def to_s(precision = 9)
+    def to_s(precision = self.class.default_to_s_precision)
       precision = Integer(precision).abs
       div, unit = DIVISORS.find { |d, _| to_nanos.abs >= d }
 
