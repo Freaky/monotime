@@ -5,16 +5,16 @@
 ### Added
 
 - Default precision for `Duration#to_s` can be set using
-  `Duration.default_to_s_precision=`
+  `Duration.default_to_s_precision=`.
 - Default sleep function can be set using `Duration.sleep_function=`
 - `Duration::ZERO` and `Duration.zero` for an easy, memory-efficient
   zero-duration singleton.
 - `Instant.clock_id` and `Instant.clock_id=` to control the default  clock
-  source
+  source.
 - `Instant.clock_getres` to get the minimum supported `Duration` from the
-  selected clock source
+  selected clock source.
 - `Instant.monotonic_function=` to completely replace the default monotonic
-  function
+  function.
 
 ### Changed
 
@@ -26,12 +26,13 @@
 
 ### Fixed
 
-- CI on TruffleRuby has been fixed by disabling SimpleCov
+- CI on TruffleRuby has been fixed by disabling SimpleCov.
+- Several fragile tests depending on relatively narrow sleep times have been fixed.
 
 ### Thanks
 
-- [@petergoldstein] for fixing CI on TruffleRuby and adding 3.1 and 3.2
-- [@fig] for fixing a README error
+- [@petergoldstein] for fixing CI on TruffleRuby and adding 3.1 and 3.2.
+- [@fig] for fixing a README error.
 
 ## [0.7.1] - 2021-10-22
 
