@@ -23,7 +23,7 @@ Or install it yourself as:
 
     $ gem install monotime
 
-`Monotime` is tested on Ruby 2.5&mdash;3.1, TruffleRuby, and recent JRuby 9.x releases.
+`Monotime` is tested on Ruby 2.7+, TruffleRuby, and JRuby.
 
 ## Usage
 
@@ -179,4 +179,3 @@ depending on platform.
 [hitimes](https://rubygems.org/gems/hitimes) is a popular and mature alternative
 which also includes a variety of features for gathering statistics about
 measurements, and may offer higher precision on some platforms.
-
