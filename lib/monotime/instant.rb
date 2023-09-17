@@ -71,9 +71,7 @@ module Monotime
       # +clock_id+, as a +Duration+, or +nil+ if invalid.
       #
       # @param clock [Numeric] Optional clock id instead of default.
-      def clock_getres(clock = nil)
-        # Defend against unset @clock_id
-        clock = @clock_id if @clock_id && clock.nil?
+      def clock_getres(clock = @clock_id)
         Duration.from_nanos(Process.clock_getres(clock, :nanosecond))
       rescue SystemCallError
         # suppress errors
