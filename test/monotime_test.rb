@@ -189,9 +189,6 @@ class MonotimeTest < Minitest::Test
   end
 
   def test_duration_format
-    if RUBY_ENGINE == 'truffleruby'
-      skip 'Duration tests skipped due to https://github.com/oracle/truffleruby/issues/1511'
-    end
     assert_equal '1s', Duration.from_secs(1).to_s
     assert_equal '1.5s', Duration.from_secs(1.5).to_s
     assert_equal '1.25s', Duration.from_secs(1.25).to_s
