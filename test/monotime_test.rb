@@ -257,4 +257,22 @@ class MonotimeTest < Minitest::Test
     assert_equal Duration.new.object_id, Duration::ZERO.object_id
     assert_equal Duration.secs(0).object_id, Duration::ZERO.object_id
   end
+
+  def test_getres
+    assert_instance_of Duration, Instant.clock_getres
+  end
+
+  def test_clock_name
+    assert_instance_of Symbol, Instant.clock_name
+  end
+
+
+  def test_change_clock
+    old_clock_id = Instant.clock_id
+    Instant.clock_id = Process::CLOCK_REALTIME
+    assert_equal Process::CLOCK_REALTIME, Instant.clock_id
+
+    assert_instance_of Instant, Instant.now
+    Instant.clock_id = old_clock_id
+  end
 end
