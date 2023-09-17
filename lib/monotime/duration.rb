@@ -8,12 +8,21 @@ module Monotime
     class << self
       # The sleep function used by all +Monotime+ sleep functions.
       #
-      # This defaults to +Kernel::sleep+
+      # This function must accept a positive +Float+ number of seconds and return
+      # the +Float+ time slept.
+      #
+      # Defaults to +Kernel.method(:sleep)+
+      #
+      # @overload sleep_function=(function)
+      #   @param function [#call]
       attr_accessor :sleep_function
 
-      # Default precision for +to_s+
+      # Precision for +Duration#to_s+ if not otherwise specified
       #
-      # Defaults to 9
+      # Defaults to 9.
+      #
+      # @overload default_to_s_precision=(precision)
+      #   @param precision [Numeric]
       attr_accessor :default_to_s_precision
     end
 
@@ -102,7 +111,7 @@ module Monotime
     # @example
     #   (Duration.from_secs(10) + Duration.from_secs(5)).to_s # => "15s"
     #
-    # @param [Duration, #to_nanos]
+    # @param other [Duration, #to_nanos]
     # @return [Duration]
     def +(other)
       raise TypeError, 'Not one of: [Duration, #to_nanos]' unless other.respond_to?(:to_nanos)
@@ -116,7 +125,7 @@ module Monotime
     # @example
     #   (Duration.from_secs(10) - Duration.from_secs(5)).to_s # => "5s"
     #
-    # @param [Duration, #to_nanos]
+    # @param other [Duration, #to_nanos]
     # @return [Duration]
     def -(other)
       raise TypeError, 'Not one of: [Duration, #to_nanos]' unless other.respond_to?(:to_nanos)
@@ -129,7 +138,7 @@ module Monotime
     # @example
     #   (Duration.from_secs(10) / 2).to_s # => "5s"
     #
-    # @param [Numeric]
+    # @param other [Numeric]
     # @return [Duration]
     def /(other)
       Duration.new(to_nanos / other)
@@ -140,7 +149,7 @@ module Monotime
     # @example
     #   (Duration.from_secs(10) * 2).to_s # => "20s"
     #
-    # @param [Numeric]
+    # @param other [Numeric]
     # @return [Duration]
     def *(other)
       Duration.new(to_nanos * other)
@@ -173,7 +182,7 @@ module Monotime
     # Compare the *value* of this +Duration+ with another, or any +#to_nanos+-coercible
     # object, or nil if not comparable.
     #
-    # @param [Duration, #to_nanos, Object]
+    # @param other [Duration, #to_nanos, Object]
     # @return [-1, 0, 1, nil]
     def <=>(other)
       to_nanos <=> other.to_nanos if other.respond_to?(:to_nanos)
@@ -182,7 +191,7 @@ module Monotime
     # Compare the equality of the *value* of this +Duration+ with another, or
     # any +#to_nanos+-coercible object, or nil if not comparable.
     #
-    # @param [Duration, #to_nanos, Object]
+    # @param other [Duration, #to_nanos, Object]
     # @return [Boolean]
     def ==(other)
       other.respond_to?(:to_nanos) && to_nanos == other.to_nanos
@@ -190,7 +199,7 @@ module Monotime
 
     # Check equality of the value and type of this +Duration+ with another.
     #
-    # @param [Duration, Object]
+    # @param other [Duration, Object]
     # @return [Boolean]
     def eql?(other)
       other.is_a?(Duration) && to_nanos == other.to_nanos
@@ -270,6 +279,8 @@ module Monotime
     # Sleep for the duration of this +Duration+.  Equivalent to
     # +Kernel.sleep(duration.to_secs)+.
     #
+    # The sleep function may be overridden globally using +Duration.sleep_function=+
+    #
     # @example
     #   Duration.from_secs(1).sleep  # => 1
     #   Duration.from_secs(-1).sleep # => raises NotImplementedError
@@ -277,6 +288,7 @@ module Monotime
     # @raise [NotImplementedError] negative +Duration+ sleeps are not yet supported.
     # @return [Integer]
     # @see Instant#sleep
+    # @see Duration.sleep_function=
     def sleep
       raise NotImplementedError, 'time travel module missing' if negative?
 
@@ -295,6 +307,8 @@ module Monotime
     # Format this +Duration+ into a human-readable string, with a given number
     # of decimal places.
     #
+    # The default precision may be set globally using +Duration.default_to_s_precision=+
+    #
     # The exact format is subject to change, users with specific requirements
     # are encouraged to use their own formatting methods.
     #
@@ -308,6 +322,7 @@ module Monotime
     #
     # @param precision [Integer] the maximum number of decimal places
     # @return [String]
+    # @see Duration.default_to_s_precision=
     def to_s(precision = self.class.default_to_s_precision)
       precision = Integer(precision).abs
       div, unit = DIVISORS.find { |d, _| to_nanos.abs >= d }
