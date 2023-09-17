@@ -108,11 +108,10 @@ class MonotimeTest < Minitest::Test
   end
 
   def test_duration_measure
-    ten_ms = Duration.from_millis(10)
-    assert_includes 5..50, Duration.measure { ten_ms.sleep }.to_millis
     res, elapsed = Duration.with_measure { "bloop" }
     assert_equal "bloop", res
     assert_instance_of Duration, elapsed
+    assert elapsed.positive?
   end
 
   def test_type_errors
@@ -123,26 +122,26 @@ class MonotimeTest < Minitest::Test
   end
 
   def test_sleeps
+    slept = Duration.zero
+    old_sleep_function = Duration.sleep_function
+    Duration.sleep_function = ->(secs) { slept += Duration.secs(secs);secs }
     ten_ms = Duration.from_millis(10)
 
     t = Instant.now
     a = t.sleep(ten_ms)
-
-    # Sleeping slightly less than the requested period is perfectly legitimate.
-    # Interlace another sleep test in the hope this is sufficient.
-    assert_includes 2..50, Duration.measure { ten_ms.sleep }.to_millis
-
+    t -= ten_ms
     b = t.sleep(ten_ms)
 
-    assert((t + ten_ms).sleep.negative?)
+    assert((t - ten_ms).sleep.negative?)
 
-    assert_includes 2..50, a.to_millis
+    assert_includes 9..11, a.to_millis
     assert a > b
     assert b.negative?
 
     # Quick check of aliases
-    assert_includes 2..50, Instant.now.sleep_millis(10).to_millis
-    assert_includes 2..50, Instant.now.sleep_secs(0.01).to_millis
+    assert_includes 9..11, Instant.now.sleep_millis(10).to_millis
+    assert_includes 9..11, Instant.now.sleep_secs(0.01).to_millis
+    Duration.sleep_function = old_sleep_function
   end
 
   def test_duration_unary
