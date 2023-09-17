@@ -251,4 +251,10 @@ class MonotimeTest < Minitest::Test
 
     Duration.sleep_function = Kernel.method(:sleep)
   end
+
+  def test_zero_constant
+    assert_equal Duration.zero.object_id, Duration::ZERO.object_id
+    assert_equal Duration.new.object_id, Duration::ZERO.object_id
+    assert_equal Duration.secs(0).object_id, Duration::ZERO.object_id
+  end
 end

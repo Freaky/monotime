@@ -5,6 +5,9 @@ module Monotime
   class Duration
     include Comparable
 
+    # A static instance for zero durations
+    ZERO = allocate.tap { |d| d.instance_eval { @ns = 0 ; freeze } }
+
     class << self
       # The sleep function used by all +Monotime+ sleep functions.
       #
@@ -42,6 +45,19 @@ module Monotime
     end
 
     class << self
+      # @!visibility private
+      def new(nanos = 0)
+        return ZERO if nanos.zero?
+        super
+      end
+
+      # Return a zero +Duration+.
+      #
+      # @return [Duration]
+      def zero
+        ZERO
+      end
+
       # Generate a new +Duration+ measuring the given number of seconds.
       #
       # @param secs [Numeric]
