@@ -112,8 +112,8 @@ module Monotime
     # Sugar for +#elapsed.to_s+.
     #
     # @see Duration#to_s
-    def to_s(*args)
-      elapsed.to_s(*args)
+    def to_s(...)
+      elapsed.to_s(...)
     end
 
     # Add a +Duration+ or +#to_nanos+-coercible object to this +Instant+, returning
@@ -173,7 +173,7 @@ module Monotime
     #
     # @return [Integer]
     def hash
-      self.class.hash ^ @ns.hash
+      [self.class, @ns].hash
     end
   end
 end

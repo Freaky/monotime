@@ -48,6 +48,7 @@ module Monotime
       # @!visibility private
       def new(nanos = 0)
         return ZERO if nanos.zero?
+
         super
       end
 
@@ -225,7 +226,7 @@ module Monotime
     #
     # @return [Integer]
     def hash
-      self.class.hash ^ to_nanos.hash
+      [self.class, to_nanos].hash
     end
 
     # Return this +Duration+ in seconds.
@@ -304,7 +305,7 @@ module Monotime
     # @raise [NotImplementedError] negative +Duration+ sleeps are not yet supported.
     # @return [Integer]
     # @see Instant#sleep
-    # @see Duration.sleep_function=
+    # @see sleep_function=
     def sleep
       raise NotImplementedError, 'time travel module missing' if negative?
 
@@ -338,7 +339,7 @@ module Monotime
     #
     # @param precision [Integer] the maximum number of decimal places
     # @return [String]
-    # @see Duration.default_to_s_precision=
+    # @see default_to_s_precision=
     def to_s(precision = self.class.default_to_s_precision)
       precision = Integer(precision).abs
       div, unit = DIVISORS.find { |d, _| to_nanos.abs >= d }
