@@ -1,11 +1,12 @@
-[![Gem Version](https://badge.fury.io/rb/monotime.svg)](https://badge.fury.io/rb/monotime)
-![Build Status](https://github.com/Freaky/monotime/actions/workflows/ci.yml/badge.svg)
-[![Inline docs](http://inch-ci.org/github/Freaky/monotime.svg?branch=master)](http://inch-ci.org/github/Freaky/monotime)
-[![Yard Docs](http://img.shields.io/badge/yard-docs-blue.svg)](https://www.rubydoc.info/gems/monotime)
 
 # Monotime
 
 A sensible interface to Ruby's monotonic clock, inspired by Rust.
+
+[![Gem Version](https://badge.fury.io/rb/monotime.svg)](https://badge.fury.io/rb/monotime)
+[![Build Status](https://github.com/Freaky/monotime/actions/workflows/ci.yml/badge.svg)](https://github.com/Freaky/monotime/actions)
+[![Inline docs](http://inch-ci.org/github/Freaky/monotime.svg?branch=master)](http://inch-ci.org/github/Freaky/monotime)
+[![Yard Docs](http://img.shields.io/badge/yard-docs-blue.svg)](https://www.rubydoc.info/gems/monotime)
 
 ## Installation
 
@@ -159,7 +160,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/Freaky/monotime.
+Bug reports and pull requests are welcome on GitHub at <https://github.com/Freaky/monotime>.
 
 ## License
 
@@ -169,13 +170,19 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ### Core Ruby
 
-For a zero-dependency alternative, see
+For a zero-dependency alternative upon which `monotime` is based, see
 [`Process.clock_gettime`](https://ruby-doc.org/core-2.6.3/Process.html#method-c-clock_gettime).
-`monotime` currently only uses `Process::CLOCK_MONOTONIC`, but others may offer higher precision
-depending on platform.
+
+`Process::CLOCK_MONOTONIC` is a safe default, but other options may offer better
+behaviour in face of NTP frequency skew or suspend/resume and should be evaluated
+carefully.
 
 ### Other Gems
 
 [hitimes](https://rubygems.org/gems/hitimes) is a popular and mature alternative
 which also includes a variety of features for gathering statistics about
-measurements, and may offer higher precision on some platforms.
+measurements.
+
+[concurrent-ruby](https://rubygems.org/gems/concurrent-ruby) includes
+`Concurrent.monotonic_time`, which is at the time of writing a trivial proxy to
+the aforementioned `Process::clock_gettime` with `Process::CLOCK_MONOTONIC`.

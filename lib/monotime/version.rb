@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
 module Monotime
-  # Try to avoid blatting existing VERSION constants when we're included.
-  MONOTIME_VERSION = '0.7.1'
+  # Version of the `monotime` gem
+  MONOTIME_VERSION = '0.8.0'
 end
