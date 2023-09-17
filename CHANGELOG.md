@@ -18,14 +18,20 @@
 
 ### Changed
 
-- The default clock source now chooses from a selection of options depending on
-  which have the highest resolution and most suitable behaviour on a given
-  platform, including avoiding NTP frequency skew and counting time spent in
-  system suspend.
+- The default clock source is now chosen from a selection of options instead of
+  defaulting to `CLOCK_MONOTONIC``.  Where possible options are used which are
+  unaffected by NTP frequency skew and which do not count time in system suspend.
+- CI matrix drops Ruby 2.5 and 2.6 and adds 3.1, 3.2, head branches of Ruby,
+  JRuby, and TruffleRuby, and also tests under macOS.
 
-### Removed
+### Fixed
 
-- Testing under Ruby 2.5 and 2.6.
+- CI on TruffleRuby has been fixed by disabling SimpleCov
+
+### Thanks
+
+- [@petergoldstein] for fixing CI on TruffleRuby and adding 3.1 and 3.2
+- [@fig] for fixing a README error
 
 ## [0.7.1] - 2021-10-22
 
@@ -161,3 +167,5 @@
 [0.8.0]: https://github.com/Freaky/monotime/commits/v0.7.0
 [issue #1]: https://github.com/Freaky/monotime/issues/1
 [@celsworth]: https://github.com/celsworth
+[@petergoldstein]: https://github.com/petergoldstein
+[@fig]: https://github.com/fig
