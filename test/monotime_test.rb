@@ -226,4 +226,29 @@ class MonotimeTest < Minitest::Test
     assert_equal '100s', Duration.from_secs(100).to_s(0)
     assert_equal '100ns', Duration.from_nanos(100).to_s
   end
+
+  def test_duration_global_to_s_precision
+    duration = Duration.from_nanos(1111111111)
+    assert_equal "1.111111111s", duration.to_s
+    assert_equal 9, Duration.default_to_s_precision
+
+    Duration.default_to_s_precision = 2
+    assert_equal 2, Duration.default_to_s_precision
+    assert_equal "1.11s", duration.to_s
+
+    Duration.default_to_s_precision = 9
+  end
+
+  def test_duration_global_sleep_function
+    assert_equal Kernel.method(:sleep), Duration.sleep_function
+
+    slept = 0
+    Duration.sleep_function = ->(duration) { slept += duration }
+
+    Duration.secs(1).sleep
+    Duration.millis(1).sleep
+    assert_in_epsilon slept, 1.001
+
+    Duration.sleep_function = Kernel.method(:sleep)
+  end
 end
