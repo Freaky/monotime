@@ -11,7 +11,10 @@ Layout/LineLength:
   Max: 96
 
 Metrics/ClassLength:
-  Max: 120
+  Max: 140
+
+Metrics/MethodLength:
+  Max: 20
 
 Style/AsciiComments:
   Enabled: false
@@ -35,4 +38,7 @@ Style/ExplicitBlockArgument:
   Enabled: false
 
 Style/MixinUsage:
+  Enabled: false
+
+Style/TrailingCommaInArrayLiteral:
   Enabled: false
