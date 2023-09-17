@@ -12,25 +12,6 @@ module Monotime
     include Comparable
 
     class << self
-      # The +Process.clock_gettime+ clock id used to create +Instant+ instances
-      # by the default monotonic function.
-      #
-      # Suggested options include:
-      #
-      # * +Process::CLOCK_MONOTONIC+
-      # * +Process::CLOCK_MONOTONIC_FAST+
-      # * +Process::CLOCK_MONOTONIC_PRECISE+
-      # * +Process::CLOCK_UPTIME_RAW+
-      # * +Process::CLOCK_MONOTONIC_RAW+
-      # * +Process::CLOCK_HIRES+
-      #
-      # These are platform-dependant and may vary in resolution, performance,
-      # and behaviour from ntpd timer skew.
-      #
-      # It is possible to set non-monotonic clock sources here.  You probably
-      # shouldn't.
-      #
-      # Defaults to auto-detect.
       attr_writer :clock_id
 
       # The symbolic name of the automatically-selected +Process.clock_gettime+
@@ -50,6 +31,38 @@ module Monotime
       #   @param function [#call]
       attr_accessor :monotonic_function
 
+      # @overload clock_id
+      #   The configured or detected +Process.clock_getime+ clock identifier.
+      #
+      #   Raises +NotImplementedError+ if a suitable monotonic clock source cannot
+      #   be found and one has not been specified manually.
+      #
+      #   @return [Numeric]
+      #
+      # @overload clock_id=(id)
+      #   The +Process.clock_gettime+ clock id used to create +Instant+ instances
+      #   by the default monotonic function.
+      #
+      #   Suggested options include but are not limited to:
+      #
+      #   * +Process::CLOCK_MONOTONIC_RAW+
+      #   * +Process::CLOCK_UPTIME_RAW+
+      #   * +Process::CLOCK_UPTIME_PRECISE+
+      #   * +Process::CLOCK_UPTIME_FAST+
+      #   * +Process::CLOCK_UPTIME+
+      #   * +Process::CLOCK_MONOTONIC_PRECISE+
+      #   * +Process::CLOCK_MONOTONIC_FAST+
+      #   * +Process::CLOCK_MONOTONIC+
+      #
+      #   These are platform-dependant and may vary in resolution, performance,
+      #   and behaviour from NTP frequency skew and system suspend/resume.
+      #
+      #   It is possible to set non-monotonic clock sources here.  You probably
+      #   shouldn't.
+      #
+      #   Defaults to auto-detect.
+      #
+      #   @param id [Numeric]
       def clock_id
         @clock_id ||= detect_clock_id
       end
