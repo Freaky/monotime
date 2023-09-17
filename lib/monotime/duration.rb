@@ -5,8 +5,20 @@ module Monotime
   class Duration
     include Comparable
 
+    # Create a new +Duration+ of a specified number of nanoseconds, zero by
+    # default.
+    #
+    # Users are strongly advised to use +Duration.from_nanos+ instead.
+    #
+    # @param nanos [Integer]
+    # @see from_nanos
+    def initialize(nanos = 0)
+      @ns = Integer(nanos)
+      freeze
+    end
+
     # A static instance for zero durations
-    ZERO = allocate.tap { |d| d.instance_eval { @ns = 0 ; freeze } }
+    ZERO = allocate.tap { |d| d.__send__(:initialize, 0) }
 
     class << self
       # The sleep function used by all +Monotime+ sleep functions.
@@ -31,18 +43,6 @@ module Monotime
 
     self.sleep_function = Kernel.method(:sleep)
     self.default_to_s_precision = 9
-
-    # Create a new +Duration+ of a specified number of nanoseconds, zero by
-    # default.
-    #
-    # Users are strongly advised to use +#from_nanos+ instead.
-    #
-    # @param nanos [Integer]
-    # @see #from_nanos
-    def initialize(nanos = 0)
-      @ns = Integer(nanos)
-      freeze
-    end
 
     class << self
       # @!visibility private
