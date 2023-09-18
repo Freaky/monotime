@@ -12,38 +12,16 @@ module Monotime
     include Comparable
 
     class << self
-      attr_writer :clock_id
-
-      # The symbolic name of the automatically-selected +Process.clock_gettime+
-      # clock id, if available.  This will *not* reflect a manually-set +clock_id+.
-      #
-      # @return [Symbol, nil]
-      attr_reader :clock_name
-
-      # The function used to create +Instant+ instances.
-      #
-      # This function must return a +Numeric+, monotonic count of nanoseconds
-      # since a fixed point in the past.
-      #
-      # Defaults to `lambda { Process.clock_gettime(clock_id, :nanosecond) }`.
-      #
-      # @overload monotonic_function=(function)
-      #   @param function [#call]
-      attr_accessor :monotonic_function
-
       # @overload clock_id
-      #   The configured or detected +Process.clock_getime+ clock identifier.
-      #
-      #   Raises +NotImplementedError+ if a suitable monotonic clock source cannot
-      #   be found and one has not been specified manually.
+      #   The +Process.clock_gettime+ clock id used to create +Instant+ instances
+      #   by the default monotonic function.
       #
       #   @return [Numeric]
       #
       # @overload clock_id=(id)
-      #   The +Process.clock_gettime+ clock id used to create +Instant+ instances
-      #   by the default monotonic function.
       #
-      #   Suggested options include but are not limited to:
+      #   Override the default +Process.clock_gettime+ clock id.  Some potential
+      #   choices include but are not limited to:
       #
       #   * +Process::CLOCK_MONOTONIC_RAW+
       #   * +Process::CLOCK_UPTIME_RAW+
@@ -55,54 +33,44 @@ module Monotime
       #   * +Process::CLOCK_MONOTONIC+
       #
       #   These are platform-dependant and may vary in resolution, performance,
-      #   and behaviour from NTP frequency skew and system suspend/resume.
+      #   and behaviour from NTP frequency skew and system suspend/resume, and
+      #   should be selected with care.
       #
       #   It is possible to set non-monotonic clock sources here.  You probably
       #   shouldn't.
       #
-      #   Defaults to auto-detect.
+      #   Defaults to +Process::CLOCK_MONOTONIC+.
       #
       #   @param id [Numeric]
-      def clock_id
-        @clock_id ||= detect_clock_id
-      end
+      attr_accessor :clock_id
+
+      # The function used to create +Instant+ instances.
+      #
+      # This function must return a +Numeric+, monotonic count of nanoseconds
+      # since a fixed point in the past.
+      #
+      # Defaults to +-> { Process.clock_gettime(clock_id, :nanosecond) }+.
+      #
+      # @overload monotonic_function=(function)
+      #   @param function [#call]
+      attr_accessor :monotonic_function
 
       # Return the claimed resolution of the given clock id or the configured
       # +clock_id+, as a +Duration+, or +nil+ if invalid.
       #
+      # Note per Ruby issue #16740, the practical usability of this method is
+      # dubious and non-portable.
+      #
       # @param clock [Numeric] Optional clock id instead of default.
-      def clock_getres(clock = @clock_id)
+      def clock_getres(clock = clock_id)
         Duration.from_nanos(Process.clock_getres(clock, :nanosecond))
       rescue SystemCallError
         # suppress errors
       end
-
-      private
-
-      def detect_clock_id
-        name, id, =
-          [
-            :CLOCK_MONOTONIC_RAW,     # Linux, not affected by NTP frequency adjustments
-            :CLOCK_UPTIME_RAW,        # macOS, not affected by NTP frequency adjustments
-            :CLOCK_UPTIME_PRECISE,    # FreeBSD, increments while system is running
-            :CLOCK_UPTIME,            # OpenBSD, increments while system is running
-            :CLOCK_MONOTONIC_PRECISE, # FreeBSD, precise monotonic clock
-            :CLOCK_MONOTONIC,         # Standard cross-platform monotonic clock
-          ]
-          .each_with_index # Used to force a stable sort in min_by
-          .filter { |name, _| Process.const_defined?(name) }
-          .map { |name, index| [name, Process.const_get(name), index] }
-          .filter_map { |clock| clock.insert(2, clock_getres(clock[1])) }
-          .min_by { |clock| clock[2..] } # find smallest resolution and index
-          .tap { |clock| raise NotImplementedError, 'No usable clock' unless clock }
-
-        @clock_name = name
-        id
-      end
     end
 
     self.monotonic_function = -> { Process.clock_gettime(clock_id, :nanosecond) }
-    clock_id # detect our clock_id early
+    self.clock_id = Process::CLOCK_MONOTONIC
 
     # Create a new +Instant+ from an optional nanosecond measurement.
     #

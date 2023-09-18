@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.8.1] - 2023-09-18
+
+### Changed
+
+- After further consideration, return to defaulting to `CLOCK_MONOTONIC` instead
+  of the overly-elaborate auto-selection introduced in 0.8.0.
+
+### Removed
+
+- `Instant.clock_name`.  No I'm not incrementing to 0.9.  It's been a few hours,
+   you're not using it, shut up.
+
 ## [0.8.0] - 2023-09-17
 
 ### Added
@@ -165,8 +177,10 @@
 [0.6.1]: https://github.com/Freaky/monotime/commits/v0.6.1
 [0.7.0]: https://github.com/Freaky/monotime/commits/v0.7.0
 [0.7.1]: https://github.com/Freaky/monotime/commits/v0.7.0
-[0.8.0]: https://github.com/Freaky/monotime/commits/v0.7.0
+[0.8.0]: https://github.com/Freaky/monotime/commits/v0.8.0
+[0.8.1]: https://github.com/Freaky/monotime/commits/v0.8.1
 [issue #1]: https://github.com/Freaky/monotime/issues/1
+[Ruby #16740]: https://bugs.ruby-lang.org/issues/16740
 [@celsworth]: https://github.com/celsworth
 [@petergoldstein]: https://github.com/petergoldstein
 [@fig]: https://github.com/fig
