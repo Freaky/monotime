@@ -108,6 +108,12 @@ class MonotimeTest < Minitest::Test
   end
 
   def test_duration_measure
+    elapsed = Duration.measure { "bleep" }
+    assert_instance_of Duration, elapsed
+    assert elapsed.positive?
+  end
+
+  def test_duration_with_measure
     res, elapsed = Duration.with_measure { "bloop" }
     assert_equal "bloop", res
     assert_instance_of Duration, elapsed
