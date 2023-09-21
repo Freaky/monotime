@@ -31,17 +31,24 @@ module Monotime
       #   * +Process::CLOCK_MONOTONIC_PRECISE+
       #   * +Process::CLOCK_MONOTONIC_FAST+
       #   * +Process::CLOCK_MONOTONIC+
+      #   * +:MACH_ABSOLUTE_TIME_BASED_CLOCK_MONOTONIC+
+      #   * +:TIMES_BASED_CLOCK_MONOTONIC+
       #
-      #   These are platform-dependant and may vary in resolution, performance,
-      #   and behaviour from NTP frequency skew and system suspend/resume, and
-      #   should be selected with care.
+      #   These are platform-dependant and may vary in resolution, accuracy,
+      #   performance, and behaviour in light of system suspend/resume and NTP
+      #   frequency skew.  They should be selected carefully based on your specific
+      #   needs and environment.
       #
       #   It is possible to set non-monotonic clock sources here.  You probably
       #   shouldn't.
       #
-      #   Defaults to +Process::CLOCK_MONOTONIC+.
+      #   Defaults to auto-selection from whatever is available from:
       #
-      #   @param id [Numeric]
+      #   * +CLOCK_UPTIME_RAW+ (if running under macOS)
+      #   * +CLOCK_MONOTONIC+
+      #   * +CLOCK_REALTIME+ (non-monotonic fallback, issues a run-time warning)
+      #
+      #   @param id [Numeric, Symbol]
       attr_accessor :clock_id
 
       # The function used to create +Instant+ instances.
@@ -61,16 +68,48 @@ module Monotime
       # Note per Ruby issue #16740, the practical usability of this method is
       # dubious and non-portable.
       #
-      # @param clock [Numeric] Optional clock id instead of default.
+      # @param clock [Numeric, Symbol] Optional clock id instead of default.
       def clock_getres(clock = clock_id)
         Duration.from_nanos(Process.clock_getres(clock, :nanosecond))
       rescue SystemCallError
         # suppress errors
       end
+
+      # The symbolic name of the currently-selected +clock_id+, if available.
+      #
+      # @return [Symbol, nil]
+      def clock_name
+        return clock_id if clock_id.is_a? Symbol
+
+        Process.constants.find do |c|
+          c.to_s.start_with?('CLOCK_') && Process.const_get(c) == clock_id
+        end
+      end
+
+      private
+
+      def select_clock_id
+        if RUBY_PLATFORM.include?('darwin') && Process.const_defined?(:CLOCK_UPTIME_RAW)
+          # Offers nanosecond resolution and appears to be slightly faster on two
+          # different Macs (M1 and x64)
+          #
+          # There is also :MACH_ABSOLUTE_TIME_BASED_CLOCK_MONOTONIC which calls
+          # mach_absolute_time() directly, but documentation for that recommends
+          # CLOCK_UPTIME_RAW, and the performance difference is minimal.
+          Process::CLOCK_UPTIME_RAW
+        elsif Process.const_defined?(:CLOCK_MONOTONIC)
+          Process::CLOCK_MONOTONIC
+        else
+          # There is also :TIMES_BASED_CLOCK_MONOTONIC, but having seen it just return
+          # 0 instead of an error on a MSVC build this may be the safer option.
+          warn 'No monotonic clock source detected, falling back to CLOCK_REALTIME'
+          Process::CLOCK_REALTIME
+        end
+      end
     end
 
     self.monotonic_function = -> { Process.clock_gettime(clock_id, :nanosecond) }
-    self.clock_id = Process::CLOCK_MONOTONIC
+    self.clock_id = select_clock_id
 
     # Create a new +Instant+ from an optional nanosecond measurement.
     #
