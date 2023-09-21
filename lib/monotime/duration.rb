@@ -106,7 +106,9 @@ module Monotime
       #
       # @return [Duration]
       def measure
-        Instant.now.tap { yield }.elapsed
+        start = Instant.now
+        yield
+        start.elapsed
       end
 
       # Return the result of the yielded block alongside a +Duration+.
