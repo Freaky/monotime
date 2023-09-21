@@ -274,4 +274,11 @@ class MonotimeTest < Minitest::Test
     assert_instance_of Instant, Instant.now
     Instant.clock_id = old_clock_id
   end
+
+  def test_clock_name
+    old_clock_id = Instant.clock_id
+    Instant.clock_id = Process::CLOCK_REALTIME
+    assert_equal :CLOCK_REALTIME, Instant.clock_name
+    Instant.clock_id = old_clock_id
+  end
 end
