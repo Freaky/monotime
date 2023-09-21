@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.8.2] - 2023-09-21
+
+### Added
+
+- `Instant.clock_name` is back and now tracks `clock_id` using reflection.
+- Explicit minimum Ruby version in gemspec (2.7.0).
+
+### Changed
+
+- Clock auto-selection redux. We choose the first available from:
+
+  1. `CLOCK_UPTIME_RAW` on macOS, faster and higher resolution, also used by Rust
+  2. `CLOCK_MONOTONIC`
+  3. `CLOCK_REALTIME`, a non-monotonic fallback that issues a warning on startup
+
 ## [0.8.1] - 2023-09-18
 
 ### Changed
