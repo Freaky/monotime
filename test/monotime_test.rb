@@ -3,6 +3,8 @@ require 'test_helper'
 class MonotimeTest < Minitest::Test
   include Monotime
 
+  puts "Clock source: #{Instant.clock_name}"
+
   def test_that_it_has_a_version_number
     refute_nil ::Monotime::MONOTIME_VERSION
   end
@@ -231,7 +233,7 @@ class MonotimeTest < Minitest::Test
     assert_equal '100ns', Duration.from_nanos(100).to_s
   end
 
-  def test_duration_global_to_s_precision
+  def test_duration_to_s_precision
     duration = Duration.from_nanos(1111111111)
     assert_equal "1.111111111s", duration.to_s
     assert_equal 9, Duration.default_to_s_precision
@@ -243,7 +245,7 @@ class MonotimeTest < Minitest::Test
     Duration.default_to_s_precision = 9
   end
 
-  def test_duration_global_sleep_function
+  def test_duration_sleep_function
     assert_equal Kernel.method(:sleep), Duration.sleep_function
 
     slept = 0
@@ -266,13 +268,22 @@ class MonotimeTest < Minitest::Test
     assert_instance_of Duration, Instant.clock_getres
   end
 
-  def test_change_clock
+  def test_instant_clock_id
     old_clock_id = Instant.clock_id
     Instant.clock_id = Process::CLOCK_REALTIME
     assert_equal Process::CLOCK_REALTIME, Instant.clock_id
 
     assert_instance_of Instant, Instant.now
     Instant.clock_id = old_clock_id
+  end
+
+  def test_instant_monotonic_function
+    old_fn = Instant.monotonic_function
+    now = 0
+    Instant.monotonic_function = ->() { now += 1 }
+    assert_equal Duration.nanos(1), Instant.now.elapsed
+    assert_equal 2, now
+    Instant.monotonic_function = old_fn
   end
 
   def test_clock_name
