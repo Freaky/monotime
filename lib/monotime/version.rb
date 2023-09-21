@@ -2,5 +2,5 @@
 
 module Monotime
   # Version of the `monotime` gem
-  MONOTIME_VERSION = '0.8.1'
+  MONOTIME_VERSION = '0.8.2'
 end
