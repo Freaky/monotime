@@ -171,11 +171,11 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ### Core Ruby
 
 For a zero-dependency alternative upon which `monotime` is based, see
-[`Process.clock_gettime`](https://ruby-doc.org/core-2.6.3/Process.html#method-c-clock_gettime).
+[`Process.clock_gettime`](https://www.rubydoc.info/stdlib/core/Process:clock_gettime).
 
-`Process::CLOCK_MONOTONIC` is a safe default, but other options may offer better
-behaviour in face of NTP frequency skew or suspend/resume and should be evaluated
-carefully.
+`Process::CLOCK_MONOTONIC` is a safe default, but other options may offer higher
+resolution or alternative behaviour in light of system suspend/resume or NTP
+frequency skew.
 
 ### Other Gems
 
