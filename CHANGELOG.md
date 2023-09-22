@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.8.2] - 2023-09-21
+## [0.8.2] - 2023-09-22
 
 ### Added
 
@@ -14,6 +14,8 @@
   1. `CLOCK_UPTIME_RAW` on macOS, faster and higher resolution, also used by Rust
   2. `CLOCK_MONOTONIC`
   3. `CLOCK_REALTIME`, a non-monotonic fallback that issues a warning on startup
+
+- Slight performance bump for `Duration.measure` on Ruby <= 3.1
 
 ## [0.8.1] - 2023-09-18
 
@@ -194,6 +196,7 @@
 [0.7.1]: https://github.com/Freaky/monotime/commits/v0.7.0
 [0.8.0]: https://github.com/Freaky/monotime/commits/v0.8.0
 [0.8.1]: https://github.com/Freaky/monotime/commits/v0.8.1
+[0.8.2]: https://github.com/Freaky/monotime/commits/v0.8.2
 [issue #1]: https://github.com/Freaky/monotime/issues/1
 [Ruby #16740]: https://bugs.ruby-lang.org/issues/16740
 [@celsworth]: https://github.com/celsworth
