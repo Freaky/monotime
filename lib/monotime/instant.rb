@@ -225,7 +225,7 @@ module Monotime
     # @param other [Duration, #to_nanos]
     # @return [Instant]
     def +(other)
-      return TypeError, 'Not one of: [Duration, #to_nanos]' unless other.respond_to?(:to_nanos)
+      raise TypeError, 'Not one of: [Duration, #to_nanos]' unless other.respond_to?(:to_nanos)
 
       Instant.new(@ns + other.to_nanos)
     end

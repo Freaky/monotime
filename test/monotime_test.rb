@@ -125,8 +125,11 @@ class MonotimeTest < Minitest::Test
   def test_type_errors
     assert_raises(TypeError) { Instant.now.duration_since(0) }
     assert_raises(TypeError) { Instant.now - 0 }
+    assert_raises(TypeError) { Instant.now + 0 }
     assert_raises(TypeError) { Duration.secs(1) + 0 }
     assert_raises(TypeError) { Duration.secs(1) - 0 }
+    assert_raises(TypeError) { Duration.secs(1) * "foo" }
+    assert_raises(TypeError) { Duration.secs(1) / "foo" }
   end
 
   def test_sleeps
