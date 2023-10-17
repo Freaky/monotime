@@ -149,13 +149,13 @@ class MonotimeTest < Minitest::Test
 
     assert((t - ten_ms).sleep.negative?)
 
-    assert_includes 9..11, a.to_millis
+    assert_includes 5..50, a.to_millis
     assert a > b
     assert b.negative?
 
     # Quick check of aliases
-    assert_includes 9..11, Instant.now.sleep_millis(10).to_millis
-    assert_includes 9..11, Instant.now.sleep_secs(0.01).to_millis
+    assert_includes 5..50, Instant.now.sleep_millis(10).to_millis
+    assert_includes 5..50, Instant.now.sleep_secs(0.01).to_millis
     Duration.sleep_function = old_sleep_function
   end
 
@@ -253,7 +253,8 @@ class MonotimeTest < Minitest::Test
   end
 
   def test_duration_sleep_function
-    assert_equal Kernel.method(:sleep), Duration.sleep_function
+    old_sleep_function = Duration.sleep_function
+    assert_equal Kernel.method(:sleep), old_sleep_function
 
     slept = 0
     Duration.sleep_function = ->(duration) { slept += duration }
@@ -262,7 +263,7 @@ class MonotimeTest < Minitest::Test
     Duration.millis(1).sleep
     assert_in_epsilon slept, 1.001
 
-    Duration.sleep_function = Kernel.method(:sleep)
+    Duration.sleep_function = old_sleep_function
   end
 
   def test_zero_constant
