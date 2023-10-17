@@ -182,7 +182,7 @@ module Monotime
     # @param duration [nil, Duration, #to_nanos]
     # @return [Duration] the slept duration, if +#positive?+, else the overshot time
     def sleep(duration = nil)
-      remaining = duration ? duration - elapsed : -elapsed
+      remaining = duration ? Duration.from_nanos(duration.to_nanos - elapsed.to_nanos) : -elapsed
 
       remaining.tap { |rem| rem.sleep if rem.positive? }
     end

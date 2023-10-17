@@ -137,11 +137,15 @@ class MonotimeTest < Minitest::Test
     old_sleep_function = Duration.sleep_function
     Duration.sleep_function = ->(secs) { slept += Duration.secs(secs);secs }
     ten_ms = Duration.from_millis(10)
+    also_ten_ms = Object.new
+    def also_ten_ms.to_nanos()
+      Duration.from_millis(10).to_nanos
+    end
 
     t = Instant.now
     a = t.sleep(ten_ms)
     t -= ten_ms
-    b = t.sleep(ten_ms)
+    b = t.sleep(also_ten_ms)
 
     assert((t - ten_ms).sleep.negative?)
 
