@@ -1,0 +1,111 @@
+# Classes
+module Monotime
+  MONOTIME_VERSION: String
+
+  # There has to be a better way of doing this
+  interface _Sigh
+    def is_a?: (untyped) -> bool
+    def respond_to?: (Symbol) -> bool
+  end
+
+  interface _ToNanos
+    include _Sigh
+
+    def to_nanos: -> Integer
+  end
+
+  interface _MonotonicFunction
+    include _Sigh
+
+    def call: -> Integer
+  end
+
+  interface _SleepFunction
+    include _Sigh
+
+    def call: (Float) -> Integer
+  end
+
+  class Duration
+    include Comparable
+
+    ZERO: Duration
+    DIVISORS: Array[[Float | Integer, String]]
+    @ns: Integer
+
+    def ns: -> Integer
+    def initialize: (?Integer nanos) -> void
+    def self.new: (?Integer nanos) -> Duration
+    def self.zero: -> Duration
+    def self.from_secs: (Float | Integer secs) -> Duration
+    alias self.secs self.from_secs
+    def self.from_millis: (Float | Integer millis) -> Duration
+    alias self.millis self.from_millis
+    def self.from_micros: (Float | Integer micros) -> Duration
+    alias self.micros self.from_micros
+    def self.from_nanos: (Integer nanos) -> Duration
+    alias self.nanos self.from_nanos
+    def self.measure: -> Duration
+    def self.with_measure: -> [untyped, Duration]
+    def self.sleep_function: -> _SleepFunction
+    def self.sleep_function=: (_SleepFunction) -> void
+    def self.default_to_s_precision: -> Integer
+    def self.default_to_s_precision=: (Integer) -> void
+    def +: (_ToNanos other) -> Duration
+    def -: (_ToNanos other) -> Duration
+    def /: (_ToNanos other) -> Duration
+    def *: (_ToNanos other) -> Duration
+    def -@: -> Duration
+    def abs: -> Duration
+    def <=>: (_ToNanos other) -> Integer?
+    def ==: (_ToNanos other) -> bool
+    def eql?: (untyped other) -> bool
+    def hash: -> Integer
+    def to_secs: -> Float
+    alias secs to_secs
+    def to_millis: -> Float
+    alias millis to_millis
+    def to_micros: -> Float
+    alias micros to_micros
+    def to_nanos: -> Integer
+    alias nanos to_nanos
+    def positive?: -> bool
+    def negative?: -> bool
+    def zero?: -> boolish
+    def nonzero?: -> boolish
+    def sleep: -> Integer
+    def to_s: (?Integer precision) -> String
+  end
+
+  class Instant
+    include Comparable
+
+    attr_reader ns: Integer
+
+    def self.clock_getres: (?untyped clock) -> Duration?
+    def self.clock_name: -> Symbol?
+    def self.clock_id: -> untyped
+    def self.clock_id=: (untyped clock) -> void
+    def self.monotonic_function: -> _MonotonicFunction
+    def self.monotonic_function=: (_MonotonicFunction function) -> void
+    def self.select_clock_id: -> Integer
+    def initialize: (?Float | Integer nanos) -> void
+    def self.now: -> Instant
+    def duration_since: (Instant earlier) -> Duration
+    def elapsed: -> Duration
+    def in_past?: -> bool
+    alias past? in_past?
+    def in_future?: -> bool
+    alias future? in_future?
+    def sleep: (?_ToNanos ?duration) -> Duration
+    def sleep_secs: (Float | Integer secs) -> Duration
+    def sleep_millis: (Float | Integer millis) -> Duration
+    def to_s: (?Integer precision) -> String
+    def +: (_ToNanos other) -> Instant
+    def -: (Duration | Instant | _ToNanos other) -> (Duration | Instant)
+    def <=>: (untyped other) -> Integer?
+    def ==: (untyped other) -> bool
+    alias eql? ==
+    def hash: -> Integer
+  end
+end

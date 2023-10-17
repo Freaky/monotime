@@ -70,7 +70,7 @@ module Monotime
       #
       # @param clock [Numeric, Symbol] Optional clock id instead of default.
       def clock_getres(clock = clock_id)
-        Duration.from_nanos(Process.clock_getres(clock, :nanosecond))
+        Duration.from_nanos(Integer(Process.clock_getres(clock, :nanosecond)))
       rescue SystemCallError
         # suppress errors
       end
@@ -136,7 +136,11 @@ module Monotime
     def duration_since(earlier)
       raise TypeError, 'Not an Instant' unless earlier.is_a?(Instant)
 
-      earlier - self
+      # `earlier - self` is cleaner, but upsets type checks and duplicates our
+      # type checks.
+
+      # @type var earlier: Instant
+      Duration.new(earlier.ns - @ns)
     end
 
     # Return a +Duration+ since this +Instant+ and now.
@@ -182,7 +186,11 @@ module Monotime
     # @param duration [nil, Duration, #to_nanos]
     # @return [Duration] the slept duration, if +#positive?+, else the overshot time
     def sleep(duration = nil)
-      remaining = duration ? Duration.from_nanos(duration.to_nanos - elapsed.to_nanos) : -elapsed
+      remaining = if duration
+                    Duration.from_nanos(duration.to_nanos - elapsed.to_nanos)
+                  else
+                    -elapsed
+                  end
 
       remaining.tap { |rem| rem.sleep if rem.positive? }
     end
@@ -242,8 +250,10 @@ module Monotime
     # @return [Duration, Instant]
     def -(other)
       if other.is_a?(Instant)
+        # @type var other: Instant
         Duration.new(@ns - other.ns)
       elsif other.respond_to?(:to_nanos)
+        # @type var other: Duration | _ToNanos
         Instant.new(@ns - other.to_nanos)
       else
         raise TypeError, 'Not one of: [Instant, Duration, #to_nanos]'

@@ -343,8 +343,12 @@ module Monotime
     # @return [String]
     # @see default_to_s_precision=
     def to_s(precision = self.class.default_to_s_precision)
+      # This is infallible provided DIVISORS has an entry for 0
       precision = Integer(precision).abs
       div, unit = DIVISORS.find { |d, _| to_nanos.abs >= d }
+
+      # @type var div: Float | Integer
+      # @type var unit: String
 
       if div.zero?
         format('%d%s', to_nanos, unit)
