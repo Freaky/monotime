@@ -318,7 +318,7 @@ module Monotime
       [1_000_000_000.0, 's'],
       [1_000_000.0, 'ms'],
       [1_000.0, 'μs'],
-      [0, 'ns']
+      [0.0, 'ns']
     ].map(&:freeze).freeze
 
     private_constant :DIVISORS
@@ -343,17 +343,17 @@ module Monotime
     # @return [String]
     # @see default_to_s_precision=
     def to_s(precision = self.class.default_to_s_precision)
-      # This is infallible provided DIVISORS has an entry for 0
       precision = Integer(precision).abs
-      div, unit = DIVISORS.find { |d, _| to_nanos.abs >= d }
+      nanos = to_nanos
 
-      # @type var div: Float | Integer
-      # @type var unit: String
+      # This is infallible provided DIVISORS has an entry for 0
+      div, unit = DIVISORS.find { |d, _| nanos.abs >= d }
 
-      if div.zero?
-        format('%d%s', to_nanos, unit)
+      if div&.zero?
+        format('%d%s', nanos, unit)
       else
-        format("%#.#{precision}f", to_nanos / div).sub(/\.?0*\z/, '') << unit
+        # `#' for `f' forces to show the decimal point.
+        format("%#.#{precision}f", nanos / div).sub(/\.?0*\z/, '') << unit.to_s
       end
     end
   end
