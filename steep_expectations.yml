@@ -3,46 +3,6 @@
   diagnostics:
   - range:
       start:
-        line: 110
-        character: 8
-      end:
-        line: 110
-        character: 13
-    severity: WARNING
-    message: Cannot detect the type of the expression
-    code: Ruby::FallbackAny
-  - range:
-      start:
-        line: 110
-        character: 8
-      end:
-        line: 110
-        character: 13
-    severity: ERROR
-    message: No block given for `yield`
-    code: Ruby::UnexpectedYield
-  - range:
-      start:
-        line: 122
-        character: 14
-      end:
-        line: 122
-        character: 19
-    severity: WARNING
-    message: Cannot detect the type of the expression
-    code: Ruby::FallbackAny
-  - range:
-      start:
-        line: 122
-        character: 14
-      end:
-        line: 122
-        character: 19
-    severity: ERROR
-    message: No block given for `yield`
-    code: Ruby::UnexpectedYield
-  - range:
-      start:
         line: 163
         character: 19
       end:
@@ -82,37 +42,9 @@
         character: 26
     severity: ERROR
     message: |-
-      Cannot assign a value of type `::Array[(::Array[(::Float | ::String)] | ::Array[(::Integer | ::String)])]` to a constant of type `::Array[[(::Float | ::Integer), ::String]]`
-        ::Array[(::Array[(::Float | ::String)] | ::Array[(::Integer | ::String)])] <: ::Array[[(::Float | ::Integer), ::String]]
-          (::Array[(::Float | ::String)] | ::Array[(::Integer | ::String)]) <: [(::Float | ::Integer), ::String]
-            ::Array[(::Float | ::String)] <: [(::Float | ::Integer), ::String]
-    code: Ruby::IncompatibleAssignment
-  - range:
-      start:
-        line: 348
-        character: 6
-      end:
-        line: 348
-        character: 9
-    severity: ERROR
-    message: |-
-      Cannot assign a value of type `(::Float | ::Integer | nil)` to a variable of type `(::Float | ::Integer)`
-        (::Float | ::Integer | nil) <: (::Float | ::Integer)
-          nil <: (::Float | ::Integer)
-            nil <: ::Float
-    code: Ruby::IncompatibleAssignment
-  - range:
-      start:
-        line: 348
-        character: 11
-      end:
-        line: 348
-        character: 15
-    severity: ERROR
-    message: |-
-      Cannot assign a value of type `(::String | nil)` to a variable of type `::String`
-        (::String | nil) <: ::String
-          nil <: ::String
+      Cannot assign a value of type `::Array[::Array[(::Float | ::String)]]` to a constant of type `::Array[[::Float, ::String]]`
+        ::Array[::Array[(::Float | ::String)]] <: ::Array[[::Float, ::String]]
+          ::Array[(::Float | ::String)] <: [::Float, ::String]
     code: Ruby::IncompatibleAssignment
   - range:
       start:
@@ -120,7 +52,7 @@
         character: 35
       end:
         line: 356
-        character: 49
+        character: 46
     severity: ERROR
     message: |-
       Cannot find compatible overloading of method `/` of type `::Integer`
@@ -142,15 +74,3 @@
     severity: ERROR
     message: Type `::Object` does not have method `include`
     code: Ruby::NoMethod
-- file: lib/monotime/instant.rb
-  diagnostics:
-  - range:
-      start:
-        line: 99
-        character: 19
-      end:
-        line: 99
-        character: 35
-    severity: ERROR
-    message: 'Cannot find the declaration of constant: `CLOCK_UPTIME_RAW`'
-    code: Ruby::UnknownConstant

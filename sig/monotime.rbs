@@ -2,27 +2,17 @@
 module Monotime
   MONOTIME_VERSION: String
 
-  # There has to be a better way of doing this
-  interface _Sigh
-    def is_a?: (untyped) -> bool
-    def respond_to?: (Symbol) -> bool
-  end
-
   interface _ToNanos
-    include _Sigh
-
+    def is_a?: (Module) -> bool
+    def respond_to?: (Symbol name, ?boolish include_all) -> bool
     def to_nanos: -> Integer
   end
 
   interface _MonotonicFunction
-    include _Sigh
-
     def call: -> Integer
   end
 
   interface _SleepFunction
-    include _Sigh
-
     def call: (Float) -> Integer
   end
 
@@ -30,35 +20,35 @@ module Monotime
     include Comparable
 
     ZERO: Duration
-    DIVISORS: Array[[Float | Integer, String]]
+    DIVISORS: ::Array[[Float, String]]
     @ns: Integer
 
     def ns: -> Integer
-    def initialize: (?Integer nanos) -> void
-    def self.new: (?Integer nanos) -> Duration
+    def initialize: (?int nanos) -> void
+    def self.new: (?int nanos) -> Duration
     def self.zero: -> Duration
-    def self.from_secs: (Float | Integer secs) -> Duration
+    def self.from_secs: (real secs) -> Duration
     alias self.secs self.from_secs
-    def self.from_millis: (Float | Integer millis) -> Duration
+    def self.from_millis: (real millis) -> Duration
     alias self.millis self.from_millis
-    def self.from_micros: (Float | Integer micros) -> Duration
+    def self.from_micros: (real micros) -> Duration
     alias self.micros self.from_micros
-    def self.from_nanos: (Integer nanos) -> Duration
+    def self.from_nanos: (int nanos) -> Duration
     alias self.nanos self.from_nanos
-    def self.measure: -> Duration
-    def self.with_measure: -> [untyped, Duration]
+    def self.measure: () { () -> untyped } -> Duration
+    def self.with_measure: () { () -> untyped } -> [untyped, Duration]
     def self.sleep_function: -> _SleepFunction
     def self.sleep_function=: (_SleepFunction) -> void
     def self.default_to_s_precision: -> Integer
-    def self.default_to_s_precision=: (Integer) -> void
+    def self.default_to_s_precision=: (int) -> void
     def +: (_ToNanos other) -> Duration
     def -: (_ToNanos other) -> Duration
-    def /: (_ToNanos other) -> Duration
-    def *: (_ToNanos other) -> Duration
+    def /: (real other) -> Duration
+    def *: (real other) -> Duration
     def -@: -> Duration
     def abs: -> Duration
-    def <=>: (_ToNanos other) -> Integer?
-    def ==: (_ToNanos other) -> bool
+    def <=>: (_ToNanos | untyped other) -> Integer?
+    def ==: (_ToNanos | untyped other) -> bool
     def eql?: (untyped other) -> bool
     def hash: -> Integer
     def to_secs: -> Float
@@ -74,7 +64,7 @@ module Monotime
     def zero?: -> boolish
     def nonzero?: -> boolish
     def sleep: -> Integer
-    def to_s: (?Integer precision) -> String
+    def to_s: (?int precision) -> String
   end
 
   class Instant
@@ -89,7 +79,7 @@ module Monotime
     def self.monotonic_function: -> _MonotonicFunction
     def self.monotonic_function=: (_MonotonicFunction function) -> void
     def self.select_clock_id: -> Integer
-    def initialize: (?Float | Integer nanos) -> void
+    def initialize: (?int nanos) -> void
     def self.now: -> Instant
     def duration_since: (Instant earlier) -> Duration
     def elapsed: -> Duration
@@ -97,10 +87,10 @@ module Monotime
     alias past? in_past?
     def in_future?: -> bool
     alias future? in_future?
-    def sleep: (?_ToNanos ?duration) -> Duration
-    def sleep_secs: (Float | Integer secs) -> Duration
-    def sleep_millis: (Float | Integer millis) -> Duration
-    def to_s: (?Integer precision) -> String
+    def sleep: (?(_ToNanos | nil) duration) -> Duration
+    def sleep_secs: (real secs) -> Duration
+    def sleep_millis: (real millis) -> Duration
+    def to_s: (?int precision) -> String
     def +: (_ToNanos other) -> Instant
     def -: (Duration | Instant | _ToNanos other) -> (Duration | Instant)
     def <=>: (untyped other) -> Integer?
