@@ -123,13 +123,18 @@ class MonotimeTest < Minitest::Test
   end
 
   def test_type_errors
-    assert_raises(TypeError) { Instant.now.duration_since(0) }
-    assert_raises(TypeError) { Instant.now - 0 }
-    assert_raises(TypeError) { Instant.now + 0 }
-    assert_raises(TypeError) { Duration.secs(1) + 0 }
-    assert_raises(TypeError) { Duration.secs(1) - 0 }
-    assert_raises(TypeError) { Duration.secs(1) * "foo" }
-    assert_raises(TypeError) { Duration.secs(1) / "foo" }
+    type_error = begin
+      RBS::Test::Tester::TypeError
+    rescue NameError
+      TypeError
+    end
+    assert_raises(type_error) { Instant.now.duration_since(0) }
+    assert_raises(type_error) { Instant.now - 0 }
+    assert_raises(type_error) { Instant.now + 0 }
+    assert_raises(type_error) { Duration.secs(1) + 0 }
+    assert_raises(type_error) { Duration.secs(1) - 0 }
+    assert_raises(type_error) { Duration.secs(1) * "foo" }
+    assert_raises(type_error) { Duration.secs(1) / "foo" }
   end
 
   def test_sleeps

@@ -40,5 +40,6 @@ Gem::Specification.new do |spec|
 
   if RUBY_PLATFORM != 'java' && RUBY_VERSION.split(".").first.to_i >= 3
     spec.add_development_dependency "steep", "~> 1.5"
+    spec.add_development_dependency "rbs", "~> 3.2"
   end
 end

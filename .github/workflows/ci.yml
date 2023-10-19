@@ -24,3 +24,4 @@ jobs:
         ruby-version: '3.2'
         bundler-cache: true
     - run: bundle exec steep check --with-expectations
+    - run: bundle exec rbs -I sig test --target 'Monotime::*' rake test
