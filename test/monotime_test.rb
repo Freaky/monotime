@@ -135,7 +135,7 @@ class MonotimeTest < Minitest::Test
   def test_sleeps
     slept = Duration.zero
     old_sleep_function = Duration.sleep_function
-    Duration.sleep_function = ->(secs) { slept += Duration.secs(secs);secs }
+    Duration.sleep_function = ->(secs) { slept += Duration.secs(secs);secs.to_i }
     ten_ms = Duration.from_millis(10)
     also_ten_ms = Object.new
     def also_ten_ms.to_nanos()
@@ -257,7 +257,7 @@ class MonotimeTest < Minitest::Test
     assert_equal Kernel.method(:sleep), old_sleep_function
 
     slept = 0
-    Duration.sleep_function = ->(duration) { slept += duration }
+    Duration.sleep_function = ->(duration) { slept += duration;duration.to_i }
 
     Duration.secs(1).sleep
     Duration.millis(1).sleep
