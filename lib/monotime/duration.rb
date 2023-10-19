@@ -47,7 +47,7 @@ module Monotime
     class << self
       # @!visibility private
       def new(nanos = 0)
-        return ZERO if nanos.zero?
+        return ZERO if 0 == nanos # rubocop:disable Style/*
 
         super
       end
