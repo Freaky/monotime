@@ -96,9 +96,9 @@ module Monotime
           # There is also :MACH_ABSOLUTE_TIME_BASED_CLOCK_MONOTONIC which calls
           # mach_absolute_time() directly, but documentation for that recommends
           # CLOCK_UPTIME_RAW, and the performance difference is minimal.
-          Process::CLOCK_UPTIME_RAW
+          Process.const_get(:CLOCK_UPTIME_RAW)
         elsif Process.const_defined?(:CLOCK_MONOTONIC)
-          Process::CLOCK_MONOTONIC
+          Process.const_get(:CLOCK_MONOTONIC)
         else
           # There is also :TIMES_BASED_CLOCK_MONOTONIC, but having seen it just return
           # 0 instead of an error on a MSVC build this may be the safer option.
