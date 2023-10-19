@@ -60,6 +60,13 @@ class MonotimeTest < Minitest::Test
     assert elapsed.positive?
   end
 
+  def test_instant_sub
+    now = Instant.now
+    zero = now - now
+
+    assert zero.zero?
+  end
+
   def test_instant_to_s
     assert_match(/\A\d+.s\z/, Instant.now.to_s(0))
   end
